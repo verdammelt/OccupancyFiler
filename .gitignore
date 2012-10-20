@@ -1,2 +1,6 @@
 target
 .idea/workspace.xml
+testArchive.dir
+testOutput.dir
+testInput.dir
+seqNum.txt

@@ -1,0 +1,7 @@
+* move file
+* rename file
+* chop off header
+* archiving processed files?
+* sequence number incrementing
+* error handling (like missing files and diretories)
+* output/logging
