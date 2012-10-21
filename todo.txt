@@ -1,7 +1,8 @@
 x move file
 x rename file
-* sequence number incrementing
-* chop off header
+x sequence number component
+x chop off header
+* sequence number incrementing in the filer
 * archiving processed files?
 * error handling (like missing files and directories)
 * output/logging

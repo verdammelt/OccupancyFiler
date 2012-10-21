@@ -1,6 +1,11 @@
-package OccupancyFiler.filer;
+package OccupancyFiler;
 
-import spock.lang.Specification;
+
+import OccupancyFiler.filer.FileMover
+import OccupancyFiler.filer.FileRenamer
+import OccupancyFiler.filer.FileTrimmer
+import OccupancyFiler.filer.FilesInDirectory
+import spock.lang.Specification
 
 public class OccupancyFilerTest extends Specification {
     def "moves all input files to the output directory"() {
@@ -11,7 +16,7 @@ public class OccupancyFilerTest extends Specification {
         renamer.rename(_) >> new File('renamed')
 
         when:
-        new OccupancyFiler().performFiling(files, mover, renamer)
+        new OccupancyFiler().performFiling(files, mover, renamer, Mock(FileTrimmer))
 
         then:
         2 * mover.move(new File('renamed'))
@@ -29,9 +34,21 @@ public class OccupancyFilerTest extends Specification {
         def renamer = Mock(FileRenamer)
 
         when:
-        new OccupancyFiler().performFiling(files, Mock(FileMover), renamer)
+        new OccupancyFiler().performFiling(files, Mock(FileMover), renamer, Mock(FileTrimmer))
 
         then:
         1 * renamer.rename(new File('a'))
+    }
+
+    def "chops the header off the file"() {
+        given:
+        def files = mockFilesInDirectory([new File('a')])
+        def trimmer = Mock(FileTrimmer)
+
+        when:
+        new OccupancyFiler().performFiling(files, Mock(FileMover), Mock(FileRenamer), trimmer)
+
+        then:
+        1 * trimmer.removeFirstLine(new File('a'))
     }
 }

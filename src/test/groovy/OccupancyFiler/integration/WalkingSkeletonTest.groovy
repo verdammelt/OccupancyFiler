@@ -1,6 +1,6 @@
 package OccupancyFiler.integration
 
-import OccupancyFiler.filer.OccupancyFiler
+import OccupancyFiler.OccupancyFiler
 import spock.lang.Specification
 
 class WalkingSkeletonTest extends Specification {
@@ -34,7 +34,7 @@ class WalkingSkeletonTest extends Specification {
         setupTestFile('Staging_Occupancy.Boston.00001xxx.2012.csv.xls', HEADER_ROW, DATA_LINES)
 
         and: "the sequence number file is set up"
-        setupSequenceNumberFile(42)
+        setSequenceNumberTo(42)
 
         when: "the Filer is run"
         def returnValue = runFiler()
@@ -43,12 +43,15 @@ class WalkingSkeletonTest extends Specification {
         returnValue == 0
 
         and: "moved to the correct location and filename changed corrected rightly"
-        !filesIn(TEST_INPUT_DIR.path)*.name.contains('Staging_Occupancy.Boston.00000042.2012.csv')
-        filesIn(TEST_OUTPUT_DIR.path)*.name.contains('Staging_Occupancy.Boston.00000042.2012.csv')
+        !filesIn(TEST_INPUT_DIR.path)*.name.contains('Staging_Occupancy.Boston.00000043.2012.csv')
+        filesIn(TEST_OUTPUT_DIR.path)*.name.contains('Staging_Occupancy.Boston.00000043.2012.csv')
 
         and: "the file header line is removed"
-        !contentsOfOutputFile('Staging_Occupancy.Boston.00000042.2012.csv').contains(HEADER_ROW)
-        contentsOfOutputFile('Staging_Occupancy.Boston.00000042.2012.csv') == DATA_LINES
+        !contentsOfOutputFile('Staging_Occupancy.Boston.00000043.2012.csv').contains(HEADER_ROW)
+        contentsOfOutputFile('Staging_Occupancy.Boston.00000043.2012.csv') == DATA_LINES
+
+        and: "the sequence number has been updated"
+        sequenceNumberIsNow(43)
     }
 
     void setupTestFile(String inputFileName, String header, ArrayList<String> dataLines) {
@@ -56,8 +59,12 @@ class WalkingSkeletonTest extends Specification {
         file.text = ([header] + dataLines).join("\n")
     }
 
-    void setupSequenceNumberFile(int seqNum) {
+    void setSequenceNumberTo(int seqNum) {
         new File(SEQ_NUM_FILE).text = "$seqNum"
+    }
+
+    boolean sequenceNumberIsNow(int seqNum) {
+        new File(SEQ_NUM_FILE).text == "$seqNum"
     }
 
     def runFiler() {
