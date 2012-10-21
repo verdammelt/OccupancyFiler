@@ -2,7 +2,13 @@
   <dictionary name="mark">
     <words>
       <w>argv</w>
+      <w>cglib</w>
+      <w>codehaus</w>
+      <w>gmaven</w>
+      <w>nodep</w>
+      <w>objenesis</w>
       <w>renamer</w>
+      <w>spockframework</w>
     </words>
   </dictionary>
 </component>

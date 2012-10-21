@@ -51,13 +51,13 @@ class WalkingSkeletonTest extends Specification {
         contentsOfOutputFile('Staging_Occupancy.Boston.00000042.2012.csv') == DATA_LINES
     }
 
-    def setupTestFile(String inputFileName, String header, ArrayList<String> dataLines) {
+    void setupTestFile(String inputFileName, String header, ArrayList<String> dataLines) {
         def file = new File(TEST_INPUT_DIR, inputFileName)
         file.text = ([header] + dataLines).join("\n")
     }
 
-    def setupSequenceNumberFile(int num) {
-        new File(SEQ_NUM_FILE).text = "$num"
+    void setupSequenceNumberFile(int seqNum) {
+        new File(SEQ_NUM_FILE).text = "$seqNum"
     }
 
     def runFiler() {
@@ -67,16 +67,16 @@ class WalkingSkeletonTest extends Specification {
                 TEST_ARCHIVE_DIR.path)
     }
 
-    def List<File> filesIn(String dir) {
-        new File(dir).listFiles()
+    def List<File> filesIn(String directory) {
+        new File(directory).listFiles()
     }
 
     def contentsOfOutputFile(String fileName) {
         new File(TEST_OUTPUT_DIR, fileName).text.split("\n")
     }
 
-    def cleanDirectory(String dir) {
-        new File(dir).deleteDir()
-        new File(dir).mkdir()
+    def cleanDirectory(String directory) {
+        new File(directory).deleteDir()
+        new File(directory).mkdir()
     }
 }

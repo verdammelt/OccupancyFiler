@@ -3,5 +3,5 @@
 * chop off header
 * archiving processed files?
 * sequence number incrementing
-* error handling (like missing files and diretories)
+* error handling (like missing files and directories)
 * output/logging
