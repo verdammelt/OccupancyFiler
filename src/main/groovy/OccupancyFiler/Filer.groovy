@@ -1,8 +1,14 @@
 package OccupancyFiler
 
-import OccupancyFiler.filer.*
+import OccupancyFiler.environment.DeployedEnvironment
+import OccupancyFiler.environment.SequenceNumber
+import OccupancyFiler.environment.YearSource
+import OccupancyFiler.file.FileMover
+import OccupancyFiler.file.FileRenamer
+import OccupancyFiler.file.FileTrimmer
+import OccupancyFiler.file.FilesInDirectory
 
-class OccupancyFiler {
+class Filer {
     static int main(String[] argv) {
         def sequenceNumber = new SequenceNumber(new File(argv[0]))
         def files = new FilesInDirectory(new File(argv[1]))
@@ -10,7 +16,7 @@ class OccupancyFiler {
 
         def renamer = new FileRenamer(new DeployedEnvironment(), sequenceNumber, new YearSource())
 
-        new OccupancyFiler().performFiling(files, mover, renamer, new FileTrimmer())
+        new Filer().performFiling(files, mover, renamer, new FileTrimmer())
     }
 
     int performFiling(FilesInDirectory files, FileMover mover, FileRenamer renamer, FileTrimmer trimmer) {

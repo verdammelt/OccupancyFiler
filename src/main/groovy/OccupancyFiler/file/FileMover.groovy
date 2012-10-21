@@ -1,4 +1,4 @@
-package OccupancyFiler.filer
+package OccupancyFiler.file
 
 class FileMover {
     private final File targetDirectory
