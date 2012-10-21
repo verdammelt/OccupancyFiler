@@ -3,8 +3,15 @@ package OccupancyFiler.filer
 import spock.lang.Specification
 
 class FileRenamerTest extends Specification {
+    private File testFile
+
+    def setup() {
+        testFile = new File('foobar')
+        testFile.createNewFile()
+    }
 
     def cleanup() {
+        testFile.delete()
         new File(".")
                 .listFiles()
                 .findAll { it.name.startsWith('Staging_Occupancy.Boston') }
@@ -13,19 +20,20 @@ class FileRenamerTest extends Specification {
 
     def "renames the given file to the correct format"() {
         given:
-        def file = new File('foobar')
-        file.createNewFile()
+        testFile.createNewFile()
         def seqNum = Mock(SequenceNumber)
         seqNum.next() >> 2345
+        def yearSource = Mock(YearSource)
+        yearSource.thisYear >> 1970
+        def environment = Mock(DeployedEnvironment)
+        environment.name >> 'Production_Occupancy'
 
         when:
-        def renamedFile = new FileRenamer(seqNum).rename(file)
+        def renamedFile = new FileRenamer(environment, seqNum, yearSource).rename(testFile)
 
         then:
-        renamedFile.name == 'Staging_Occupancy.Boston.00002345.2012.csv'
+        renamedFile.name == 'Production_Occupancy.Boston.00002345.1970.csv'
     }
-
-    def "sets the year token to the current year"() { }
 
     def "sets the file prefix correctly according to the environment"() {
         // staging vs. prod

@@ -5,11 +5,16 @@ import org.apache.commons.io.FileUtils
 import java.text.DecimalFormat
 
 class FileRenamer {
+    private final DeployedEnvironment deployedEnvironment
     private final SequenceNumber sequenceNumber
+    private final YearSource yearSource
 
-    FileRenamer(SequenceNumber sequenceNumber) {
+    FileRenamer(DeployedEnvironment deployedEnvironment, SequenceNumber sequenceNumber, YearSource yearSource) {
+        this.deployedEnvironment = deployedEnvironment
         this.sequenceNumber = sequenceNumber
+        this.yearSource = yearSource
     }
+
     File rename(File file) {
         def newFile = new File(newName)
         FileUtils.copyFile(file, newFile)
@@ -18,7 +23,26 @@ class FileRenamer {
     }
 
     private String getNewName() {
+        [
+                prefix,
+                'Boston',
+                nextSequenceNumber,
+                thisYear,
+                'csv'
+        ].join('.')
+    }
+
+    private String getPrefix() {
+        deployedEnvironment.name
+    }
+
+    private int getThisYear() {
+        yearSource.thisYear
+    }
+
+    private String getNextSequenceNumber() {
         def formatter = new DecimalFormat("00000000")
-        'Staging_Occupancy.Boston.' + formatter.format(sequenceNumber.next()) + '.2012.csv'
+        def seqnum = formatter.format(sequenceNumber.next())
+        seqnum
     }
 }
