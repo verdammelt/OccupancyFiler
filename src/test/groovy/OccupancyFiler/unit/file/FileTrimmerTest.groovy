@@ -6,7 +6,7 @@ import spock.lang.Specification
 class FileTrimmerTest extends Specification {
     private final testFile = new File('foo')
 
-    def clean() {
+    def cleanup() {
         testFile.delete()
     }
 

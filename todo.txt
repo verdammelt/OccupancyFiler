@@ -1,9 +1,15 @@
+Requirements:
 x move file
 x rename file
 x sequence number component
 x chop off header
-* sequence number incrementing in the filer
-* archiving processed files?
+x sequence number incrementing in the filer
 * error handling (like missing files and directories)
 * output/logging
+* script to run it correctly
+
+Improvements:
+* archiving processed files?
 * parametrize the DeployedEnvironment value
+* chop off header specifically - not just first line.
+* don't increment sequence number if there is no files.
