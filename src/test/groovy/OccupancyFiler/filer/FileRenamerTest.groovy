@@ -14,7 +14,7 @@ class FileRenamerTest extends Specification {
         testFile.delete()
         new File(".")
                 .listFiles()
-                .findAll { it.name.startsWith('Staging_Occupancy.Boston') }
+                .findAll { it.name.contains('Occupancy.Boston') }
                 .each { it.delete() }
     }
 

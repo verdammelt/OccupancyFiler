@@ -1,7 +1,8 @@
 x move file
 x rename file
+* sequence number incrementing
 * chop off header
 * archiving processed files?
-* sequence number incrementing
 * error handling (like missing files and directories)
 * output/logging
+* parametrize the DeployedEnvironment value
