@@ -1,13 +1,13 @@
 package OccupancyFiler.integration
 
-import spock.lang.Specification
 import OccupancyFiler.filer.OccupancyFiler
+import spock.lang.Specification
 
 class WalkingSkeletonTest extends Specification {
 
-    private static final String TEST_OUTPUT_DIR = "testOutput.dir"
-    private static final String TEST_INPUT_DIR = "testInput.dir"
-    private static final String TEST_ARCHIVE_DIR = "testArchive.dir"
+    private static final File TEST_OUTPUT_DIR = new File("testOutput.dir")
+    private static final File TEST_INPUT_DIR = new File("testInput.dir")
+    private static final File TEST_ARCHIVE_DIR = new File("testArchive.dir")
     private static final ArrayList<String> DATA_LINES = [
             "U,100380,2737,027092,6/30/2012,30,30,",
             "D,100381,1187,018802,6/30/2012,132,100,",
@@ -18,9 +18,15 @@ class WalkingSkeletonTest extends Specification {
     private static final String SEQ_NUM_FILE = 'seqNum.txt'
 
     def setup() {
-        cleanDirectory(TEST_OUTPUT_DIR)
-        cleanDirectory(TEST_INPUT_DIR)
-        cleanDirectory(TEST_ARCHIVE_DIR)
+        TEST_ARCHIVE_DIR.mkdir()
+        TEST_INPUT_DIR.mkdir()
+        TEST_OUTPUT_DIR.mkdir()
+    }
+
+    def cleanup() {
+        TEST_ARCHIVE_DIR.deleteDir()
+        TEST_INPUT_DIR.deleteDir()
+        TEST_OUTPUT_DIR.deleteDir()
     }
 
     def "Processes a file correctly"() {
@@ -37,8 +43,8 @@ class WalkingSkeletonTest extends Specification {
         returnValue == 0
 
         and: "moved to the correct location and filename changed corrected rightly"
-        !filesIn(TEST_INPUT_DIR)*.name.contains('Staging_Occupancy.Boston.00000042.2012.csv')
-        filesIn(TEST_OUTPUT_DIR)*.name.contains('Staging_Occupancy.Boston.00000042.2012.csv')
+        !filesIn(TEST_INPUT_DIR.path)*.name.contains('Staging_Occupancy.Boston.00000042.2012.csv')
+        filesIn(TEST_OUTPUT_DIR.path)*.name.contains('Staging_Occupancy.Boston.00000042.2012.csv')
 
         and: "the file header line is removed"
         !contentsOfOutputFile('Staging_Occupancy.Boston.00000042.2012.csv').contains(HEADER_ROW)
@@ -55,7 +61,10 @@ class WalkingSkeletonTest extends Specification {
     }
 
     def runFiler() {
-        new OccupancyFiler().main(SEQ_NUM_FILE, TEST_INPUT_DIR, TEST_OUTPUT_DIR, TEST_ARCHIVE_DIR)
+        new OccupancyFiler().main(SEQ_NUM_FILE,
+                TEST_INPUT_DIR.path,
+                TEST_OUTPUT_DIR.path,
+                TEST_ARCHIVE_DIR.path)
     }
 
     def List<File> filesIn(String dir) {

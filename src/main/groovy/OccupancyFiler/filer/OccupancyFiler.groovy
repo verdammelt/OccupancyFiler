@@ -5,8 +5,12 @@ class OccupancyFiler {
         def inputDir = new File(argv[1])
         def outputDir = new File(argv[2])
 
-        inputDir.listFiles().each { it.renameTo(new File(outputDir, it.name))}
+        def files = new FilesInDirectory(inputDir)
+        def mover = new FileMover()
+
+        files.each { mover.move(it, outputDir) }
 
         0
     }
 }
+
