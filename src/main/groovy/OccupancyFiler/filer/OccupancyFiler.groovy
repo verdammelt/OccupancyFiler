@@ -8,7 +8,11 @@ class OccupancyFiler {
         def files = new FilesInDirectory(inputDir)
         def mover = new FileMover()
 
-        files.each { mover.move(it, outputDir) }
+        new OccupancyFiler().performFiling(files, outputDir, mover, new FileRenamer())
+    }
+
+    int performFiling(FilesInDirectory files, File outputDir, FileMover mover, FileRenamer renamer) {
+        files.each { mover.move(renamer.rename(it), outputDir) }
 
         0
     }
