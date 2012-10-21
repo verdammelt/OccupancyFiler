@@ -7,13 +7,14 @@ public class OccupancyFilerTest extends Specification {
         given:
         def files = mockFilesInDirectory([Mock(File), Mock(File)])
         def mover = Mock(FileMover)
-        def outputDir = Mock(File)
+        def renamer = Mock(FileRenamer)
+        renamer.rename(_) >> new File('renamed')
 
         when:
-        new OccupancyFiler().performFiling(files, outputDir, mover, Mock(FileRenamer))
+        new OccupancyFiler().performFiling(files, mover, renamer)
 
         then:
-        2 * mover.move(_, outputDir)
+        2 * mover.move(new File('renamed'))
     }
 
     FilesInDirectory mockFilesInDirectory(listOfFiles) {
@@ -28,7 +29,7 @@ public class OccupancyFilerTest extends Specification {
         def renamer = Mock(FileRenamer)
 
         when:
-        new OccupancyFiler().performFiling(files, Mock(File), Mock(FileMover), renamer)
+        new OccupancyFiler().performFiling(files, Mock(FileMover), renamer)
 
         then:
         1 * renamer.rename(new File('a'))

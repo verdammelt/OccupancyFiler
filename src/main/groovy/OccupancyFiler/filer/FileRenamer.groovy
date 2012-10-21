@@ -1,5 +1,5 @@
 package OccupancyFiler.filer
 
 class FileRenamer {
-    File rename(File file) { null }
+    File rename(File file) { file }
 }

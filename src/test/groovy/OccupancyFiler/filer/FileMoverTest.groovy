@@ -18,10 +18,10 @@ class FileMoverTest extends Specification {
 
     def "can move a file from one directory to another"() {
         given:
-        def mover = new FileMover()
+        def mover = new FileMover(testOutput)
 
         when:
-        mover.move(testFile, testOutput)
+        mover.move(testFile)
 
         then:
         testOutput.listFiles()*.name.contains(testFile.name)

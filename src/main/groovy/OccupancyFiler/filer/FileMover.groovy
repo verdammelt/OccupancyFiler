@@ -1,7 +1,12 @@
 package OccupancyFiler.filer
 
 class FileMover {
-    void move(File file, File targetDirectory) {
+    private final File targetDirectory
+
+    FileMover(File targetDirectory) {
+        this.targetDirectory = targetDirectory
+    }
+    void move(File file) {
         file.renameTo(new File(targetDirectory, file.name))
     }
 }
