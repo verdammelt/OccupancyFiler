@@ -1,4 +1,4 @@
-* move file
+x move file
 * rename file
 * chop off header
 * archiving processed files?

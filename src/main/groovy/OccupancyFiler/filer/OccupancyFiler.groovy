@@ -5,7 +5,7 @@ class OccupancyFiler {
         def files = new FilesInDirectory(new File(argv[1]))
         def mover = new FileMover(new File(argv[2]))
 
-        new OccupancyFiler().performFiling(files, mover, new FileRenamer())
+        new OccupancyFiler().performFiling(files, mover, new FileRenamer(new SequenceNumber()))
     }
 
     int performFiling(FilesInDirectory files, FileMover mover, FileRenamer renamer) {
