@@ -8,6 +8,8 @@ import OccupancyFiler.file.FileRenamer
 import OccupancyFiler.file.FileTrimmer
 import OccupancyFiler.file.FilesInDirectory
 
+import static OccupancyFiler.Logger.log
+
 class Filer {
     static void main(String[] argv) {
         validateArguments(argv)
@@ -39,8 +41,11 @@ class Filer {
 
     int performFiling(FilesInDirectory files, FileMover mover, FileRenamer renamer, FileTrimmer trimmer) {
         files.each {
+            log("processing ${it?.absolutePath}")
             trimmer.removeFirstLine(it)
-            mover.move(renamer.rename(it))
+            def newFile = renamer.rename(it)
+            log("moving to ${newFile?.absoluteFile}")
+            mover.move(newFile)
         }
 
         0

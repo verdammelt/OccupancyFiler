@@ -6,8 +6,8 @@ x chop off header
 x sequence number incrementing in the filer
 x pass deployed environment in from command line.
 x error handling (like missing files and directories)
-* output/logging
-* script to run it correctly
+x output/logging
+x script to run it correctly
 * make the FileExists.ensure method a groovy helper
 * make the FileTrimmer.removeFirstLine method a groovy helper
 
