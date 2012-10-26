@@ -2,7 +2,7 @@ package OccupancyFiler.utils
 
 import spock.lang.Specification
 
-import OccupancyFiler.file.FileExists
+import static OccupancyFiler.file.FileExists.ensureFile
 
 class FileExistsTest extends Specification {
     def "closure called if file does not exist"() {
@@ -12,7 +12,7 @@ class FileExistsTest extends Specification {
         nonExistant.exists() >> false
 
         when:
-        FileExists.ensure(nonExistant) { File file -> called = true; file }
+        ensureFile(nonExistant) { File file -> called = true; file }
 
         then:
         called
@@ -25,7 +25,7 @@ class FileExistsTest extends Specification {
         existant.exists() >> true
 
         when:
-        FileExists.ensure(existant) { File file -> called = true; file }
+        ensureFile(existant) { File file -> called = true; file }
 
         then:
         !called
@@ -38,6 +38,6 @@ class FileExistsTest extends Specification {
         def otherFile = Mock(File)
 
         expect:
-        FileExists.ensure(nonExistant) { File file -> otherFile} == otherFile
+        ensureFile(nonExistant) { File file -> otherFile} == otherFile
     }
 }
