@@ -29,8 +29,7 @@ class FileRenamerTest extends Specification {
         seqNum.next() >> 2345
         def yearSource = Mock(YearSource)
         yearSource.thisYear >> 1970
-        def environment = Mock(DeployedEnvironment)
-        environment.name >> 'Production_Occupancy'
+        def environment = new DeployedEnvironment('Production_Occupancy')
 
         when:
         def renamedFile = new FileRenamer(environment, seqNum, yearSource).rename(testFile)

@@ -4,6 +4,7 @@ x rename file
 x sequence number component
 x chop off header
 x sequence number incrementing in the filer
+x pass deployed environment in from command line.
 * error handling (like missing files and directories)
 * output/logging
 * script to run it correctly
