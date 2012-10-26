@@ -4,19 +4,23 @@ import static OccupancyFiler.file.FileExists.ensureFile
 
 class SequenceNumber {
     private final File sequenceNumberFile
+    private String currentText
 
     SequenceNumber(File sequenceNumberFile) {
         this.sequenceNumberFile = ensureFile(sequenceNumberFile) { File file ->
             file.text = "0"
             file
         }
+        this.currentText = this.sequenceNumberFile.text
     }
 
     int next() {
-        sequenceNumberFile.text.toInteger() + 1
+        def next = this.sequenceNumberFile.text.toInteger() + 1
+        currentText = next.toString()
+        next
     }
 
     void commit() {
-        sequenceNumberFile.text = next().toString()
+        sequenceNumberFile.text = currentText
     }
 }

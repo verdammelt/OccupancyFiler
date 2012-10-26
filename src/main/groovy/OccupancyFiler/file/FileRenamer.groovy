@@ -3,7 +3,6 @@ package OccupancyFiler.file
 import OccupancyFiler.environment.DeployedEnvironment
 import OccupancyFiler.environment.SequenceNumber
 import OccupancyFiler.environment.YearSource
-import org.apache.commons.io.FileUtils
 
 import java.text.DecimalFormat
 
@@ -20,7 +19,7 @@ class FileRenamer {
 
     File rename(File file) {
         def newFile = new File(newName)
-        FileUtils.copyFile(file, newFile)
+        newFile << file.asWritable()
         file.delete()
         newFile
     }

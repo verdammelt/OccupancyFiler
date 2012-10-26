@@ -13,6 +13,7 @@ x script to run it correctly
 
 Improvements:
 * archiving processed files?
-* parametrize the DeployedEnvironment value
+x parametrize the DeployedEnvironment value
 * chop off header specifically - not just first line.
-* don't increment sequence number if there is no files.
+x don't increment sequence number if there is no files.
+* code review / cleanup - could be better.

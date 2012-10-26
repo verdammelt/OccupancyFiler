@@ -12,20 +12,22 @@ import static OccupancyFiler.Logger.log
 
 class Filer {
     static void main(String[] argv) {
-        validateArguments(argv)
+        withLoggedException {
+            validateArguments(argv)
 
-        def sequenceNumber = new SequenceNumber(new File(argv[0]))
-        def files = new FilesInDirectory(new File(argv[1]))
-        def mover = new FileMover(new File(argv[2]))
-        def environment = new DeployedEnvironment(argv[3])
+            def sequenceNumber = new SequenceNumber(new File(argv[0]))
+            def files = new FilesInDirectory(new File(argv[1]))
+            def mover = new FileMover(new File(argv[2]))
+            def environment = new DeployedEnvironment(argv[3])
 
-        def renamer = new FileRenamer(environment, sequenceNumber, new YearSource())
+            def renamer = new FileRenamer(environment, sequenceNumber, new YearSource())
 
-        int retVal = new Filer().performFiling(files, mover, renamer, new FileTrimmer())
+            int retVal = new Filer().performFiling(files, mover, renamer, new FileTrimmer())
 
-        sequenceNumber.commit()
+            sequenceNumber.commit()
 
-        retVal
+            retVal
+        }
     }
 
     static void validateArguments(String[] argv) {
@@ -39,12 +41,19 @@ class Filer {
         }
     }
 
+    static def withLoggedException(Closure task) {
+        try {
+            task.call()
+        } catch (Exception exception) {
+            log("(Exception:${exception.class.simpleName}) ${exception.message}")
+        }
+    }
+
     int performFiling(FilesInDirectory files, FileMover mover, FileRenamer renamer, FileTrimmer trimmer) {
         files.each {
             log("processing ${it?.absolutePath}")
             trimmer.removeFirstLine(it)
             def newFile = renamer.rename(it)
-            log("moving to ${newFile?.absoluteFile}")
             mover.move(newFile)
         }
 

@@ -47,6 +47,18 @@ class SequenceNumberTest extends Specification {
         testFile.text == '43'
     }
 
+    def "number not changed if commit called but not next"() {
+        given:
+        testFile.text = '42'
+        def seqNum = new SequenceNumber(testFile)
+
+        when:
+        seqNum.commit()
+
+        then:
+        testFile.text == '42'
+    }
+
     def "creates sequence number file if it does not exist and sequence number starts at zero"() {
         given:
         otherFile.delete()
@@ -55,6 +67,6 @@ class SequenceNumberTest extends Specification {
         new SequenceNumber(otherFile).commit()
 
         then:
-        otherFile.text == '1'
+        otherFile.text == '0'
     }
 }
