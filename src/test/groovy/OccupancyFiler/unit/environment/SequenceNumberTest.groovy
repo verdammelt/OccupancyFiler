@@ -5,9 +5,11 @@ import spock.lang.Specification
 
 class SequenceNumberTest extends Specification {
     final File testFile = new File('foobar')
+    final File otherFile = new File('otherFile')
 
     def cleanup() {
         testFile.delete()
+        otherFile.delete()
     }
 
     def "initializes the sequence number from the given file"() {
@@ -43,5 +45,16 @@ class SequenceNumberTest extends Specification {
 
         then:
         testFile.text == '43'
+    }
+
+    def "creates sequence number file if it does not exist and sequence number starts at zero"() {
+        given:
+        otherFile.delete()
+
+        when:
+        new SequenceNumber(otherFile).commit()
+
+        then:
+        otherFile.text == '1'
     }
 }

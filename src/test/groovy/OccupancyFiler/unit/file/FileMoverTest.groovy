@@ -2,6 +2,7 @@ package OccupancyFiler.unit.file
 
 import OccupancyFiler.file.FileMover
 import spock.lang.Specification
+import OccupancyFiler.file.exception.OutputDirectoryNotFound
 
 class FileMoverTest extends Specification {
     final File testOutput = new File('testOutput')
@@ -26,5 +27,17 @@ class FileMoverTest extends Specification {
 
         then:
         testOutput.listFiles()*.name.contains(testFile.name)
+    }
+
+    def "throws useful exception if target directory was not found"() {
+        given:
+        def file = Mock(File)
+        file.exists() >> false
+
+        when:
+        new FileMover(file)
+
+        then:
+        thrown(OutputDirectoryNotFound)
     }
 }
