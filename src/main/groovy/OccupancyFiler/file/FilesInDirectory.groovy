@@ -2,14 +2,14 @@ package OccupancyFiler.file
 
 import OccupancyFiler.file.exception.InputDirectoryNotFound
 
-import static OccupancyFiler.file.FileExists.ensureFile
+import static FileEnsurer.ifDoesNotExist
 
 class FilesInDirectory implements Iterable<File> {
     private final File directory
 
     @SuppressWarnings("GroovyUnreachableStatement")
     FilesInDirectory(File directory) {
-        this.directory = ensureFile(directory) { File file ->
+        this.directory = ifDoesNotExist(directory) { File file ->
             throw new InputDirectoryNotFound(file)
             file
         }

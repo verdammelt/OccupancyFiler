@@ -17,16 +17,12 @@ class Filer {
         def logRenamed = {File file -> log("renamed to ${file?.name}"); file }
         def logMoved = { File file -> log("moved to ${file?.absolutePath}"); file }
 
-        def trim = arguments.trimmer.&trimTopLines
-        def rename = arguments.renamer.&rename
-        def move = arguments.mover.&move
-        def incrementSequenceNumber = { File file -> arguments.sequenceNumber.commit(); file }
+        def trim = arguments.trimmer.&trimTopLines >> logTrimmed
+        def rename = arguments.renamer.&rename >> logRenamed
+        def move = arguments.mover.&move >> logMoved
+        def incrSeqNum = { File file -> arguments.sequenceNumber.commit(); file }
 
-        def process = logProcessing >>
-                trim >> logTrimmed >>
-                rename >> logRenamed >>
-                move >> logMoved >>
-                incrementSequenceNumber
+        def process = logProcessing >> trim >> rename >> move >> incrSeqNum
 
         arguments.files.each process
     }

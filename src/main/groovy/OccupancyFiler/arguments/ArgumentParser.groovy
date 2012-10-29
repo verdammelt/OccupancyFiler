@@ -2,6 +2,7 @@ package OccupancyFiler.arguments
 
 import OccupancyFiler.environment.DeployedEnvironment
 import OccupancyFiler.environment.SequenceNumber
+import OccupancyFiler.environment.SequenceNumberFormatter
 import OccupancyFiler.environment.YearSource
 import OccupancyFiler.file.FileMover
 import OccupancyFiler.file.FileRenamer
@@ -20,7 +21,8 @@ class ArgumentParser {
         this.mover = new FileMover(args.outputDirectory)
         sequenceNumber = new SequenceNumber(args.seqNumFile)
         this.renamer = new FileRenamer(new DeployedEnvironment(args.environment),
-                sequenceNumber, new YearSource())
+                new YearSource(),
+                new SequenceNumberFormatter(sequenceNumber.next()))
         this.trimmer = new FileTrimmer(args.numLinesToTrim)
     }
 }

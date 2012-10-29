@@ -10,14 +10,13 @@ class ArgumentReader {
     final boolean helpWanted
     final int numLinesToTrim
 
-    int printUsage() {
+    void printUsage() {
         println "May given up to 4 arguments:"
         println "#1 - sequence number file (defaults to './seqNum.txt')"
         println "#2 - intput directory (defaults to './input')"
         println "#3 - output directory (defaults to './output')"
         println "#4 - environment (defaults to 'Staging_Occupancy')"
         println "#5 - number of lines to trim from top (defaults to 1)"
-        0
     }
 
     ArgumentReader(String[] argv) {

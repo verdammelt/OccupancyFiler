@@ -2,6 +2,7 @@ package OccupancyFiler.unit.file
 
 import OccupancyFiler.environment.DeployedEnvironment
 import OccupancyFiler.environment.SequenceNumber
+import OccupancyFiler.environment.SequenceNumberFormatter
 import OccupancyFiler.environment.YearSource
 import OccupancyFiler.file.FileRenamer
 import spock.lang.Specification
@@ -32,7 +33,7 @@ class FileRenamerTest extends Specification {
         def environment = new DeployedEnvironment('Production_Occupancy')
 
         when:
-        def renamedFile = new FileRenamer(environment, seqNum, yearSource).rename(testFile)
+        def renamedFile = new FileRenamer(environment, yearSource, new SequenceNumberFormatter(seqNum.next())).rename(testFile)
 
         then:
         renamedFile.name == 'Production_Occupancy.Boston.00002345.1970.csv'

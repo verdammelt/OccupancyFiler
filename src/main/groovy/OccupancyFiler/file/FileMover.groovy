@@ -2,14 +2,14 @@ package OccupancyFiler.file
 
 import OccupancyFiler.file.exception.OutputDirectoryNotFound
 
-import static OccupancyFiler.file.FileExists.ensureFile
+import static FileEnsurer.ifDoesNotExist
 
 class FileMover {
     private final File targetDirectory
 
     @SuppressWarnings("GroovyUnreachableStatement")
     FileMover(File targetDirectory) {
-        this.targetDirectory = ensureFile(targetDirectory) {File file ->
+        this.targetDirectory = ifDoesNotExist(targetDirectory) {File file ->
             throw new OutputDirectoryNotFound(file)
             file
         }

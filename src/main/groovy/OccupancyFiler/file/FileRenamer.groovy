@@ -1,20 +1,18 @@
 package OccupancyFiler.file
 
 import OccupancyFiler.environment.DeployedEnvironment
-import OccupancyFiler.environment.SequenceNumber
+import OccupancyFiler.environment.SequenceNumberFormatter
 import OccupancyFiler.environment.YearSource
-
-import java.text.DecimalFormat
 
 class FileRenamer {
     private final DeployedEnvironment deployedEnvironment
-    private final SequenceNumber sequenceNumber
     private final YearSource yearSource
+    private final SequenceNumberFormatter formatter
 
-    FileRenamer(DeployedEnvironment deployedEnvironment, SequenceNumber sequenceNumber, YearSource yearSource) {
+    FileRenamer(DeployedEnvironment deployedEnvironment, YearSource yearSource, SequenceNumberFormatter sequenceNumberFormatter) {
         this.deployedEnvironment = deployedEnvironment
-        this.sequenceNumber = sequenceNumber
         this.yearSource = yearSource
+        this.formatter = sequenceNumberFormatter
     }
 
     File rename(File file) {
@@ -43,8 +41,6 @@ class FileRenamer {
     }
 
     private String getNextSequenceNumber() {
-        def formatter = new DecimalFormat("00000000")
-        def seqnum = formatter.format(sequenceNumber.next())
-        seqnum
+        formatter.format()
     }
 }

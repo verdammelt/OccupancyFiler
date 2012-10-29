@@ -1,13 +1,13 @@
 package OccupancyFiler.environment
 
-import static OccupancyFiler.file.FileExists.ensureFile
+import static OccupancyFiler.file.FileEnsurer.ifDoesNotExist
 
 class SequenceNumber {
     private final File sequenceNumberFile
     private String currentText
 
     SequenceNumber(File sequenceNumberFile) {
-        this.sequenceNumberFile = ensureFile(sequenceNumberFile) { File file ->
+        this.sequenceNumberFile = ifDoesNotExist(sequenceNumberFile) { File file ->
             file.text = "0"
             file
         }

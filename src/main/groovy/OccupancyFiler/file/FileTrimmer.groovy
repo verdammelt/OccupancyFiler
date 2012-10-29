@@ -8,12 +8,7 @@ class FileTrimmer {
     }
 
     File trimTopLines(File file) {
-        def lines = file.readLines()
-        if (lines.size() > numLinesToSkip) {
-            file.text = lines[numLinesToSkip..-1].join('\n')
-        } else {
-            file.text = ""
-        }
+        file.text = file.readLines().drop(numLinesToSkip).join('\n')
         file
     }
 }
