@@ -1,6 +1,6 @@
 package OccupancyFiler
 
-class ArgumentParser {
+class ArgumentReader {
     final File seqNumFile
     final File inputDirectory
     final File outputDirectory
@@ -16,7 +16,7 @@ class ArgumentParser {
         0
     }
 
-    ArgumentParser(String[] argv) {
+    ArgumentReader(String[] argv) {
         helpWanted = (argv.length == 1 && argv[0].equals('--helpWanted'))
 
         seqNumFile = new File(getOrDefault(argv, 0, 'seqNum.txt'))

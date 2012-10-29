@@ -13,7 +13,7 @@ import static OccupancyFiler.Logger.log
 class Filer {
     static void main(String[] argv) {
         withLoggedException {
-            def arguments = new ArgumentParser(argv)
+            def arguments = new ArgumentReader(argv)
 
             if (arguments.helpWanted) {
                 arguments.printUsage()
