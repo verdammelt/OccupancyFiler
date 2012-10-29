@@ -33,9 +33,11 @@ public class FilerTest extends Specification {
         given:
         def files = mockFilesInDirectory([new File('a')])
         def renamer = Mock(FileRenamer)
+        def trimmer = Mock(FileTrimmer)
+        trimmer.removeFirstLine(_) >> {File file -> file}
 
         when:
-        new Filer().performFiling(files, Mock(FileMover), renamer, Mock(FileTrimmer))
+        new Filer().performFiling(files, Mock(FileMover), renamer, trimmer)
 
         then:
         1 * renamer.rename(new File('a'))

@@ -25,11 +25,9 @@ class Filer {
 
                 def renamer = new FileRenamer(environment, sequenceNumber, new YearSource())
 
-                int retVal = new Filer().performFiling(files, mover, renamer, new FileTrimmer())
+                new Filer().performFiling(files, mover, renamer, new FileTrimmer())
 
                 sequenceNumber.commit()
-
-                retVal
             }
         }
     }
@@ -42,15 +40,17 @@ class Filer {
         }
     }
 
-    int performFiling(FilesInDirectory files, FileMover mover, FileRenamer renamer, FileTrimmer trimmer) {
-        files.each {
-            log("processing ${it?.absolutePath}")
-            trimmer.removeFirstLine(it)
-            def newFile = renamer.rename(it)
-            mover.move(newFile)
-        }
+    void performFiling(FilesInDirectory files, FileMover mover, FileRenamer renamer, FileTrimmer trimmer) {
+        def process =
+            {File file -> log("processing ${file?.absolutePath}"); file } >>
+                    trimmer.&removeFirstLine >>
+                    {File file -> log("trimmed..."); file } >>
+                    renamer.&rename >>
+                    {File file -> log("renamed to ${file?.name}"); file } >>
+                    mover.&move >>
+                    { File file -> log("moved to ${file?.absolutePath}"); file }
 
-        0
+        files.each process
     }
 }
 

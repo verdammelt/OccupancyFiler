@@ -1,8 +1,8 @@
 package OccupancyFiler.unit.file
 
 import OccupancyFiler.file.FileMover
-import spock.lang.Specification
 import OccupancyFiler.file.exception.OutputDirectoryNotFound
+import spock.lang.Specification
 
 class FileMoverTest extends Specification {
     final File testOutput = new File('testOutput')
@@ -39,5 +39,16 @@ class FileMoverTest extends Specification {
 
         then:
         thrown(OutputDirectoryNotFound)
+    }
+
+    def "returns the new file"() {
+        given:
+        def mover = new FileMover(testOutput)
+
+        when:
+        File file = mover.move(testFile)
+
+        then:
+        file == new File(testOutput, testFile.name)
     }
 }

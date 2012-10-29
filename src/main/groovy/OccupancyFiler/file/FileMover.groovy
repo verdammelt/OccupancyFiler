@@ -2,7 +2,6 @@ package OccupancyFiler.file
 
 import OccupancyFiler.file.exception.OutputDirectoryNotFound
 
-import static OccupancyFiler.Logger.log
 import static OccupancyFiler.file.FileExists.ensureFile
 
 class FileMover {
@@ -15,9 +14,10 @@ class FileMover {
             file
         }
     }
-    void move(File file) {
+
+    File move(File file) {
         def newFile = new File(targetDirectory, file.name)
-        log("moving to ${newFile.absolutePath}")
         file.renameTo(newFile)
+        newFile
     }
 }

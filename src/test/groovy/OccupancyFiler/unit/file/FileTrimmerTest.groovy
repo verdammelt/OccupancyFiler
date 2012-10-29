@@ -15,9 +15,10 @@ class FileTrimmerTest extends Specification {
         testFile.text = "a\nb\nc"
 
         when:
-        new FileTrimmer().removeFirstLine(testFile)
+        def newFile = new FileTrimmer().removeFirstLine(testFile)
 
         then:
         testFile.text == 'b\nc'
+        newFile.text == testFile.text
     }
 }
