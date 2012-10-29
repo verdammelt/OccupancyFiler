@@ -1,6 +1,7 @@
 package OccupancyFiler.unit;
 
 
+import OccupancyFiler.ArgumentParser
 import OccupancyFiler.Filer
 import OccupancyFiler.file.FileMover
 import OccupancyFiler.file.FileRenamer
@@ -17,16 +18,10 @@ public class FilerTest extends Specification {
         renamer.rename(_) >> new File('renamed')
 
         when:
-        new Filer().performFiling(files, mover, renamer, Mock(FileTrimmer))
+        fileWithArgs(makeMockArgs(files, mover, renamer, Mock(FileTrimmer)))
 
         then:
         2 * mover.move(new File('renamed'))
-    }
-
-    FilesInDirectory mockFilesInDirectory(listOfFiles) {
-        def files = Mock(FilesInDirectory)
-        files.iterator() >> listOfFiles.iterator()
-        files
     }
 
     def "renames each file"() {
@@ -37,7 +32,7 @@ public class FilerTest extends Specification {
         trimmer.removeFirstLine(_) >> {File file -> file}
 
         when:
-        new Filer().performFiling(files, Mock(FileMover), renamer, trimmer)
+        fileWithArgs(makeMockArgs(files, Mock(FileMover), renamer, trimmer))
 
         then:
         1 * renamer.rename(new File('a'))
@@ -49,9 +44,31 @@ public class FilerTest extends Specification {
         def trimmer = Mock(FileTrimmer)
 
         when:
-        new Filer().performFiling(files, Mock(FileMover), Mock(FileRenamer), trimmer)
+        fileWithArgs(makeMockArgs(files, Mock(FileMover), Mock(FileRenamer), trimmer))
 
         then:
         1 * trimmer.removeFirstLine(new File('a'))
+    }
+
+    private FilesInDirectory mockFilesInDirectory(listOfFiles) {
+        def files = Mock(FilesInDirectory)
+        files.iterator() >> listOfFiles.iterator()
+        files
+    }
+
+    private ArgumentParser makeMockArgs(FilesInDirectory files,
+                                        FileMover mover,
+                                        FileRenamer renamer,
+                                        FileTrimmer trimmer) {
+        def args = Mock(ArgumentParser)
+        args.files >> files
+        args.mover >> mover
+        args.renamer >> renamer
+        args.trimmer >> trimmer
+        args
+    }
+
+    private void fileWithArgs(ArgumentParser args) {
+        new Filer(args).performFiling()
     }
 }

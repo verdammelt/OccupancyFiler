@@ -1,6 +1,6 @@
 package OccupancyFiler.integration
 
-import OccupancyFiler.Main
+import OccupancyFiler.FilerMain
 import spock.lang.Specification
 
 class WalkingSkeletonTest extends Specification {
@@ -66,7 +66,7 @@ class WalkingSkeletonTest extends Specification {
     }
 
     def runFiler() {
-        Main.main(SEQ_NUM_FILE.path,
+        FilerMain.main(SEQ_NUM_FILE.path,
                 TEST_INPUT_DIR.path,
                 TEST_OUTPUT_DIR.path,
                 'Staging_Occupancy')
