@@ -13,31 +13,24 @@ import static OccupancyFiler.Logger.log
 class Filer {
     static void main(String[] argv) {
         withLoggedException {
-            validateArguments(argv)
+            def arguments = new ArgumentParser(argv)
 
-            def sequenceNumber = new SequenceNumber(new File(argv[0]))
-            def files = new FilesInDirectory(new File(argv[1]))
-            def mover = new FileMover(new File(argv[2]))
-            def environment = new DeployedEnvironment(argv[3])
+            if (arguments.helpWanted) {
+                arguments.printUsage()
+            } else {
+                def sequenceNumber = new SequenceNumber(arguments.seqNumFile)
+                def files = new FilesInDirectory(arguments.inputDirectory)
+                def mover = new FileMover(arguments.outputDirectory)
+                def environment = new DeployedEnvironment(arguments.environment)
 
-            def renamer = new FileRenamer(environment, sequenceNumber, new YearSource())
+                def renamer = new FileRenamer(environment, sequenceNumber, new YearSource())
 
-            int retVal = new Filer().performFiling(files, mover, renamer, new FileTrimmer())
+                int retVal = new Filer().performFiling(files, mover, renamer, new FileTrimmer())
 
-            sequenceNumber.commit()
+                sequenceNumber.commit()
 
-            retVal
-        }
-    }
-
-    static void validateArguments(String[] argv) {
-        if (argv.length != 4) {
-            def message = """Must supply four arguments
-                             1) sequence number file
-                             2) input directory
-                             3) output directory
-                             4) environment (e.g Staging_Occupancy) """
-            throw new IllegalArgumentException(message)
+                retVal
+            }
         }
     }
 

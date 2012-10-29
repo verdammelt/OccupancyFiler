@@ -66,7 +66,7 @@ class WalkingSkeletonTest extends Specification {
     }
 
     def runFiler() {
-        new Filer().main(SEQ_NUM_FILE.path,
+        Filer.main(SEQ_NUM_FILE.path,
                 TEST_INPUT_DIR.path,
                 TEST_OUTPUT_DIR.path,
                 'Staging_Occupancy')
