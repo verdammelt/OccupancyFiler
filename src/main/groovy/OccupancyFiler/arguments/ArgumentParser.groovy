@@ -1,4 +1,4 @@
-package OccupancyFiler
+package OccupancyFiler.arguments
 
 import OccupancyFiler.environment.DeployedEnvironment
 import OccupancyFiler.environment.SequenceNumber

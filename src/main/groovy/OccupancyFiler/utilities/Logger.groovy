@@ -1,4 +1,4 @@
-package OccupancyFiler
+package OccupancyFiler.utilities
 
 @SuppressWarnings("GroovyStaticMethodNamingConvention")
 class Logger {

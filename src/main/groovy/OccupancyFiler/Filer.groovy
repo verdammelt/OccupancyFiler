@@ -1,6 +1,8 @@
 package OccupancyFiler
 
-import static OccupancyFiler.Logger.log
+import OccupancyFiler.arguments.ArgumentParser
+
+import static OccupancyFiler.utilities.Logger.log
 
 class Filer {
     private final ArgumentParser arguments

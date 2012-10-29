@@ -1,4 +1,6 @@
-package OccupancyFiler
+package OccupancyFiler.arguments
+
+import OccupancyFiler.utilities.DefaultingCollection
 
 class ArgumentReader {
     final File seqNumFile
@@ -19,16 +21,14 @@ class ArgumentReader {
     }
 
     ArgumentReader(String[] argv) {
-        helpWanted = getOrDefault(argv, 0, "").equals('--help')
+        def args = new DefaultingCollection<String>(argv.toList())
 
-        seqNumFile = new File(getOrDefault(argv, 0, 'seqNum.txt'))
-        inputDirectory = new File(getOrDefault(argv, 1, 'input'))
-        outputDirectory = new File(getOrDefault(argv, 2, 'output'))
-        environment = getOrDefault(argv, 3, 'Staging_Occupancy')
-        numLinesToTrim = Integer.parseInt(getOrDefault(argv, 4, '1'))
-    }
+        helpWanted = args.getAt(0, '').equals('--help')
 
-    String getOrDefault(String[] args, int argIdx, String defaultValue) {
-        args.length > argIdx ? args[argIdx] : defaultValue
+        seqNumFile = new File(args.getAt(0, 'seqNum.txt'))
+        inputDirectory = new File(args.getAt(1, 'input'))
+        outputDirectory = new File(args.getAt(2, 'output'))
+        environment = args.getAt(3, 'Staging_Occupancy')
+        numLinesToTrim = Integer.parseInt(args.getAt(4, '1'))
     }
 }

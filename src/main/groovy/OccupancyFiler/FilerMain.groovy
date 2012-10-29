@@ -1,6 +1,9 @@
 package OccupancyFiler
 
-import static OccupancyFiler.Logger.log
+import OccupancyFiler.arguments.ArgumentParser
+import OccupancyFiler.arguments.ArgumentReader
+
+import static OccupancyFiler.utilities.Logger.log
 
 class FilerMain {
     static void main(String[] argv) {
