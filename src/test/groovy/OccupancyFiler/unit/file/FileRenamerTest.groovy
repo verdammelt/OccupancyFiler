@@ -37,8 +37,4 @@ class FileRenamerTest extends Specification {
         then:
         renamedFile.name == 'Production_Occupancy.Boston.00002345.1970.csv'
     }
-
-    def "sets the file prefix correctly according to the environment"() {
-        // staging vs. prod
-    }
 }

@@ -1,4 +1,4 @@
-package OccupancyFiler.utils
+package OccupancyFiler.unit.file
 
 import spock.lang.Specification
 

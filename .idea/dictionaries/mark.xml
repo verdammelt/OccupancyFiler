@@ -4,6 +4,7 @@
       <w>argv</w>
       <w>cglib</w>
       <w>codehaus</w>
+      <w>existant</w>
       <w>gmaven</w>
       <w>nodep</w>
       <w>objenesis</w>
