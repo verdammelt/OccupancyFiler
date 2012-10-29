@@ -10,11 +10,7 @@ class FilerMain {
             if (arguments.helpWanted) {
                 arguments.printUsage()
             } else {
-                def argumentParser = new ArgumentParser(arguments)
-
-                new Filer(argumentParser).performFiling()
-
-                argumentParser.sequenceNumber.commit()
+                new Filer(new ArgumentParser(arguments)).performFiling()
             }
         }
     }

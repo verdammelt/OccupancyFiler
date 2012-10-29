@@ -3,6 +3,7 @@ package OccupancyFiler.unit;
 
 import OccupancyFiler.ArgumentParser
 import OccupancyFiler.Filer
+import OccupancyFiler.environment.SequenceNumber
 import OccupancyFiler.file.FileMover
 import OccupancyFiler.file.FileRenamer
 import OccupancyFiler.file.FileTrimmer
@@ -18,7 +19,7 @@ public class FilerTest extends Specification {
         renamer.rename(_) >> new File('renamed')
 
         when:
-        fileWithArgs(makeMockArgs(files, mover, renamer, Mock(FileTrimmer)))
+        fileWithArgs(makeMockArgs(files, mover, renamer, Mock(FileTrimmer), Mock(SequenceNumber)))
 
         then:
         2 * mover.move(new File('renamed'))
@@ -32,7 +33,7 @@ public class FilerTest extends Specification {
         trimmer.removeFirstLine(_) >> {File file -> file}
 
         when:
-        fileWithArgs(makeMockArgs(files, Mock(FileMover), renamer, trimmer))
+        fileWithArgs(makeMockArgs(files, Mock(FileMover), renamer, trimmer, Mock(SequenceNumber)))
 
         then:
         1 * renamer.rename(new File('a'))
@@ -44,10 +45,22 @@ public class FilerTest extends Specification {
         def trimmer = Mock(FileTrimmer)
 
         when:
-        fileWithArgs(makeMockArgs(files, Mock(FileMover), Mock(FileRenamer), trimmer))
+        fileWithArgs(makeMockArgs(files, Mock(FileMover), Mock(FileRenamer), trimmer, Mock(SequenceNumber)))
 
         then:
         1 * trimmer.removeFirstLine(new File('a'))
+    }
+
+    def "commits the sequence number after each file finished processing"() {
+        given:
+        def files = mockFilesInDirectory([new File('a'), new File('b')])
+        def sequenceNumber = Mock(SequenceNumber)
+
+        when:
+        fileWithArgs(makeMockArgs(files, Mock(FileMover), Mock(FileRenamer), Mock(FileTrimmer), sequenceNumber))
+
+        then:
+        2 * sequenceNumber.commit()
     }
 
     private FilesInDirectory mockFilesInDirectory(listOfFiles) {
@@ -59,12 +72,13 @@ public class FilerTest extends Specification {
     private ArgumentParser makeMockArgs(FilesInDirectory files,
                                         FileMover mover,
                                         FileRenamer renamer,
-                                        FileTrimmer trimmer) {
+                                        FileTrimmer trimmer, SequenceNumber sequenceNumber) {
         def args = Mock(ArgumentParser)
         args.files >> files
         args.mover >> mover
         args.renamer >> renamer
         args.trimmer >> trimmer
+        args.sequenceNumber >> sequenceNumber
         args
     }
 

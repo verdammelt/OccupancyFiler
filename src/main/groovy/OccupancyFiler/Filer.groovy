@@ -10,14 +10,21 @@ class Filer {
     }
 
     void performFiling() {
-        def process =
-            {File file -> log("processing ${file?.absolutePath}"); file } >>
-                    arguments.trimmer.&removeFirstLine >>
-                    {File file -> log("trimmed..."); file } >>
-                    arguments.renamer.&rename >>
-                    {File file -> log("renamed to ${file?.name}"); file } >>
-                    arguments.mover.&move >>
-                    { File file -> log("moved to ${file?.absolutePath}"); file }
+        def logProcessing = {File file -> log("processing ${file?.absolutePath}"); file }
+        def logTrimmed = {File file -> log("trimmed..."); file }
+        def logRenamed = {File file -> log("renamed to ${file?.name}"); file }
+        def logMoved = { File file -> log("moved to ${file?.absolutePath}"); file }
+
+        def trim = arguments.trimmer.&removeFirstLine
+        def rename = arguments.renamer.&rename
+        def move = arguments.mover.&move
+        def incrementSequenceNumber = { File file -> arguments.sequenceNumber.commit(); file }
+
+        def process = logProcessing >>
+                trim >> logTrimmed >>
+                rename >> logRenamed >>
+                move >> logMoved >>
+                incrementSequenceNumber
 
         arguments.files.each process
     }
