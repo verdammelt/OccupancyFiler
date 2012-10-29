@@ -30,7 +30,7 @@ public class FilerTest extends Specification {
         def files = mockFilesInDirectory([new File('a')])
         def renamer = Mock(FileRenamer)
         def trimmer = Mock(FileTrimmer)
-        trimmer.removeFirstLine(_) >> {File file -> file}
+        trimmer.trimTopLines(_) >> {File file -> file}
 
         when:
         fileWithArgs(makeMockArgs(files, Mock(FileMover), renamer, trimmer, Mock(SequenceNumber)))
@@ -48,7 +48,7 @@ public class FilerTest extends Specification {
         fileWithArgs(makeMockArgs(files, Mock(FileMover), Mock(FileRenamer), trimmer, Mock(SequenceNumber)))
 
         then:
-        1 * trimmer.removeFirstLine(new File('a'))
+        1 * trimmer.trimTopLines(new File('a'))
     }
 
     def "commits the sequence number after each file finished processing"() {

@@ -2,6 +2,7 @@ package OccupancyFiler.unit.file
 
 import OccupancyFiler.file.FileTrimmer
 import spock.lang.Specification
+import spock.lang.Unroll
 
 class FileTrimmerTest extends Specification {
     private final testFile = new File('foo')
@@ -10,15 +11,22 @@ class FileTrimmerTest extends Specification {
         testFile.delete()
     }
 
-    def "removeFirstLine works as advertised"() {
+    @Unroll("#numLines")
+    def "trimTopLines trims the first lines - as many as requested"(int numLines, String expectedText) {
         given:
-        testFile.text = "a\nb\nc"
+        testFile.text = "1\n2\n3"
+        def trimmer = new FileTrimmer(numLines)
 
-        when:
-        def newFile = new FileTrimmer().removeFirstLine(testFile)
+        expect:
+        trimmer.trimTopLines(testFile).text == expectedText
 
-        then:
-        testFile.text == 'b\nc'
-        newFile.text == testFile.text
+        where:
+        numLines | expectedText
+        0 | "1\n2\n3"
+        1 | "2\n3"
+        2 | "3"
+        3 | ""
+        4 | ""
+        500 | ""
     }
 }

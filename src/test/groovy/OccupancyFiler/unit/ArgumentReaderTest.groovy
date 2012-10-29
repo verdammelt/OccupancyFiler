@@ -7,7 +7,7 @@ class ArgumentReaderTest extends Specification {
 
     def "if the only argument is --help - then raise the help flag"() {
         given:
-        def args = new ArgumentReader(['--helpWanted'] as String[])
+        def args = new ArgumentReader(['--help'] as String[])
 
         expect:
         args.helpWanted

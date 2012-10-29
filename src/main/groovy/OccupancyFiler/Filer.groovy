@@ -15,7 +15,7 @@ class Filer {
         def logRenamed = {File file -> log("renamed to ${file?.name}"); file }
         def logMoved = { File file -> log("moved to ${file?.absolutePath}"); file }
 
-        def trim = arguments.trimmer.&removeFirstLine
+        def trim = arguments.trimmer.&trimTopLines
         def rename = arguments.renamer.&rename
         def move = arguments.mover.&move
         def incrementSequenceNumber = { File file -> arguments.sequenceNumber.commit(); file }

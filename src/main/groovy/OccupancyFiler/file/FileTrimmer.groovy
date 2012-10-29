@@ -1,8 +1,19 @@
 package OccupancyFiler.file
 
 class FileTrimmer {
-    File removeFirstLine(File file) {
-        file.text = file.readLines()[1..-1].join('\n')
+    final int numLinesToSkip
+
+    FileTrimmer(int numLinesToSkip) {
+        this.numLinesToSkip = numLinesToSkip
+    }
+
+    File trimTopLines(File file) {
+        def lines = file.readLines()
+        if (lines.size() > numLinesToSkip) {
+            file.text = lines[numLinesToSkip..-1].join('\n')
+        } else {
+            file.text = ""
+        }
         file
     }
 }
