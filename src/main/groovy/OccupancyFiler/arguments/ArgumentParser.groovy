@@ -19,7 +19,7 @@ class ArgumentParser {
     ArgumentParser(ArgumentReader args) {
         this.files = new FilesInDirectory(args.inputDirectory)
         this.mover = new FileMover(args.outputDirectory)
-        sequenceNumber = new SequenceNumber(args.seqNumFile)
+        this.sequenceNumber = new SequenceNumber(args.seqNumFile)
         this.renamer = new FileRenamer(new DeployedEnvironment(args.environment),
                 new YearSource(),
                 new SequenceNumberFormatter(sequenceNumber.next()))
