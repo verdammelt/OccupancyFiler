@@ -69,4 +69,34 @@ class SequenceNumberTest extends Specification {
         then:
         otherFile.text == '0'
     }
+
+    @SuppressWarnings("GroovyResultOfAssignmentUsed")
+    def "calls the given closure with the next sequence number and commits when done"() {
+        given:
+        testFile.text = "13"
+        def seqNum = new SequenceNumber(testFile)
+        def capturedSequenceNumber = -1
+        def workToDo = {int sequenceNumber -> capturedSequenceNumber = sequenceNumber }
+
+        when:
+        seqNum.doWithNextNumber workToDo
+
+        then:
+        capturedSequenceNumber == 14
+        seqNum.next() == 15
+    }
+
+    @SuppressWarnings(["GroovyUnusedCatchParameter", "GroovyEmptyCatchBlock", "GroovyLocalVariableNamingConvention"])
+    def "does not commit if task throws an exception"() {
+        given:
+        testFile.text = "13"
+        def seqNum = new SequenceNumber(testFile)
+        def workToDo = { int unused -> throw new Exception("boom") }
+
+        when:
+        try { seqNum.doWithNextNumber workToDo } catch (Exception) {}
+
+        then:
+        seqNum.next() == 14
+    }
 }

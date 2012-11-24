@@ -11,12 +11,24 @@ import OccupancyFiler.file.FilesInDirectory
 import spock.lang.Specification
 
 public class FilerTest extends Specification {
+    def "uses SequenceNumber doWithNextNumber to get the job done"() {
+        given:
+        def seqNum = Mock(SequenceNumber)
+
+        when:
+        new Filer(makeMockArgs(null, null, null, null, seqNum)).performFiling()
+
+        then:
+        1 * seqNum.doWithNextNumber(_)
+    }
+
+    @SuppressWarnings("GroovyAssignabilityCheck")
     def "moves all input files to the output directory"() {
         given:
         def files = mockFilesInDirectory([Mock(File), Mock(File)])
         def mover = Mock(FileMover)
         def renamer = Mock(FileRenamer)
-        renamer.rename(_) >> new File('renamed')
+        renamer.rename(_,_) >> new File('renamed')
 
         when:
         fileWithArgs(makeMockArgs(files, mover, renamer, Mock(FileTrimmer), Mock(SequenceNumber)))
@@ -25,6 +37,7 @@ public class FilerTest extends Specification {
         2 * mover.move(new File('renamed'))
     }
 
+    @SuppressWarnings("GroovyAssignabilityCheck")
     def "renames each file"() {
         given:
         def files = mockFilesInDirectory([new File('a')])
@@ -36,7 +49,7 @@ public class FilerTest extends Specification {
         fileWithArgs(makeMockArgs(files, Mock(FileMover), renamer, trimmer, Mock(SequenceNumber)))
 
         then:
-        1 * renamer.rename(new File('a'))
+        1 * renamer.rename(_,new File('a'))
     }
 
     def "chops the header off the file"() {
@@ -49,18 +62,6 @@ public class FilerTest extends Specification {
 
         then:
         1 * trimmer.trimTopLines(new File('a'))
-    }
-
-    def "commits the sequence number after each file finished processing"() {
-        given:
-        def files = mockFilesInDirectory([new File('a'), new File('b')])
-        def sequenceNumber = Mock(SequenceNumber)
-
-        when:
-        fileWithArgs(makeMockArgs(files, Mock(FileMover), Mock(FileRenamer), Mock(FileTrimmer), sequenceNumber))
-
-        then:
-        2 * sequenceNumber.commit()
     }
 
     private FilesInDirectory mockFilesInDirectory(listOfFiles) {
@@ -83,7 +84,8 @@ public class FilerTest extends Specification {
         argParser
     }
 
+    @SuppressWarnings("GroovyAccessibility")
     private void fileWithArgs(ArgumentParser args) {
-        new Filer(args).performFiling()
+        new Filer(args).fileWithSequenceNumber(42)
     }
 }

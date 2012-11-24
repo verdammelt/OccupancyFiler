@@ -23,4 +23,10 @@ class SequenceNumber {
     void commit() {
         sequenceNumberFile.text = currentText
     }
+
+    void doWithNextNumber(Closure task) {
+        def next = next()
+        task(next)
+        commit()
+    }
 }

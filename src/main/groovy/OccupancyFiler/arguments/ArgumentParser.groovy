@@ -22,14 +22,17 @@ class ArgumentParser {
         this.sequenceNumber = new SequenceNumber(args.seqNumFile)
         this.renamer = new FileRenamer(new DeployedEnvironment(args.environment),
                 new YearSource(),
-                new SequenceNumberFormatter(),
-        sequenceNumber)
+                new SequenceNumberFormatter())
         this.trimmer = new FileTrimmer(args.numLinesToTrim)
     }
 
     FilesInDirectory getFiles() { files }
+
     FileMover getMover() { mover }
+
     FileRenamer getRenamer() { renamer }
+
     SequenceNumber getSequenceNumber() { sequenceNumber }
+
     FileTrimmer getTrimmer() { trimmer }
 }

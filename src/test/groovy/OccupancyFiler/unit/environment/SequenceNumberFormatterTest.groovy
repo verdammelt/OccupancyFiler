@@ -8,10 +8,10 @@ class SequenceNumberFormatterTest extends Specification {
     @Unroll("#seqNum formats to '#formattedValue'")
     def "formats correctly"() {
         given:
-        def formatter = new SequenceNumberFormatter(seqNum)
+        def formatter = new SequenceNumberFormatter()
 
         expect:
-        formatter.format() == formattedValue
+        formatter.format(seqNum) == formattedValue
 
         where:
         seqNum     | formattedValue
