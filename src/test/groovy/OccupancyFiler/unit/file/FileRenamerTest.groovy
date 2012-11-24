@@ -33,7 +33,7 @@ class FileRenamerTest extends Specification {
         def environment = new DeployedEnvironment('Production_Occupancy')
 
         when:
-        def renamedFile = new FileRenamer(environment, yearSource, new SequenceNumberFormatter(seqNum.next())).rename(testFile)
+        def renamedFile = new FileRenamer(environment, yearSource, new SequenceNumberFormatter(), seqNum).rename(testFile)
 
         then:
         renamedFile.name == 'Production_Occupancy.Boston.00002345.1970.csv'

@@ -22,7 +22,8 @@ class ArgumentParser {
         this.sequenceNumber = new SequenceNumber(args.seqNumFile)
         this.renamer = new FileRenamer(new DeployedEnvironment(args.environment),
                 new YearSource(),
-                new SequenceNumberFormatter(sequenceNumber.next()))
+                new SequenceNumberFormatter(),
+        sequenceNumber)
         this.trimmer = new FileTrimmer(args.numLinesToTrim)
     }
 
