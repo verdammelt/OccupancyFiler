@@ -10,11 +10,11 @@ import OccupancyFiler.file.FileTrimmer
 import OccupancyFiler.file.FilesInDirectory
 
 class ArgumentParser {
-    FilesInDirectory files
-    FileMover mover
-    FileRenamer renamer
-    SequenceNumber sequenceNumber
-    FileTrimmer trimmer
+    private final FilesInDirectory files
+    private final FileMover mover
+    private final FileRenamer renamer
+    private final SequenceNumber sequenceNumber
+    private final FileTrimmer trimmer
 
     ArgumentParser(ArgumentReader args) {
         this.files = new FilesInDirectory(args.inputDirectory)
@@ -25,4 +25,10 @@ class ArgumentParser {
                 new SequenceNumberFormatter(sequenceNumber.next()))
         this.trimmer = new FileTrimmer(args.numLinesToTrim)
     }
+
+    FilesInDirectory getFiles() { files }
+    FileMover getMover() { mover }
+    FileRenamer getRenamer() { renamer }
+    SequenceNumber getSequenceNumber() { sequenceNumber }
+    FileTrimmer getTrimmer() { trimmer }
 }

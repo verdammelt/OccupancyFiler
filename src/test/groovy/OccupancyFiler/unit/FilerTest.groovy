@@ -72,14 +72,15 @@ public class FilerTest extends Specification {
     private ArgumentParser makeMockArgs(FilesInDirectory files,
                                         FileMover mover,
                                         FileRenamer renamer,
-                                        FileTrimmer trimmer, SequenceNumber sequenceNumber) {
-        def args = Mock(ArgumentParser)
-        args.files >> files
-        args.mover >> mover
-        args.renamer >> renamer
-        args.trimmer >> trimmer
-        args.sequenceNumber >> sequenceNumber
-        args
+                                        FileTrimmer trimmer,
+                                        SequenceNumber sequenceNumber) {
+        def argParser = Mock(ArgumentParser)
+        argParser.files >> files
+        argParser.mover >> mover
+        argParser.renamer >> renamer
+        argParser.trimmer >> trimmer
+        argParser.sequenceNumber >> sequenceNumber
+        argParser
     }
 
     private void fileWithArgs(ArgumentParser args) {
