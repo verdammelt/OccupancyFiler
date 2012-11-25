@@ -2,6 +2,7 @@ package OccupancyFiler
 
 import OccupancyFiler.arguments.ArgumentReader
 import OccupancyFiler.arguments.Toolbox
+import OccupancyFiler.logic.Filer
 
 import static OccupancyFiler.utilities.Logger.log
 

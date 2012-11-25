@@ -9,14 +9,17 @@ x error handling (like missing files and directories)
 x output/logging
 x script to run it correctly
 x remove direct File code from SequenceNumber
-* pull file path generation into a helper class
-* collect reader,writer,deleter into a single helper class
-* make the FileExists.ensure method a groovy helper
-* make the FileTrimmer.removeFirstLine method a groovy helper
+x pull file path generation into a helper class
+x parametrize the DeployedEnvironment value
+x chop off header specifically - not just first line.
+x don't increment sequence number if there is no files.
 
 Improvements:
 * archiving processed files?
-x parametrize the DeployedEnvironment value
-* chop off header specifically - not just first line.
-x don't increment sequence number if there is no files.
-* code review / cleanup - could be better.
+* make the FileExists.ensure method a groovy helper
+* make the FileTrimmer.removeFirstLine method a groovy helper
+* collect reader,writer,deleter into a single helper class
+* Keep moving all File usages up to the top
+* Split filer - the tests seem to be telling me it has two responsibilities
+    1) generate seqnum for each file in input and delete them after processing
+    2) process each file

@@ -1,13 +1,12 @@
 package OccupancyFiler.arguments
 
-import OccupancyFiler.environment.DeployedEnvironment
-import OccupancyFiler.environment.SequenceNumber
-import OccupancyFiler.environment.SequenceNumberFormatter
-import OccupancyFiler.environment.YearSource
-import OccupancyFiler.file.FileLinesTrimmer
-import OccupancyFiler.file.FilesInDirectory
-import OccupancyFiler.file.NameGenerator
-import OccupancyFiler.*
+import OccupancyFiler.arguments.environment.DeployedEnvironment
+import OccupancyFiler.arguments.environment.YearSource
+import OccupancyFiler.io.FileDeleter
+import OccupancyFiler.io.FileReader
+import OccupancyFiler.io.FileWriter
+import OccupancyFiler.io.FilesInDirectory
+import OccupancyFiler.logic.*
 
 class Toolbox {
     private final FilesInDirectory files

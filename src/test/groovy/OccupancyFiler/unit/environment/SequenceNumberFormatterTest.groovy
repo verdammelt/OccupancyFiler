@@ -1,6 +1,6 @@
 package OccupancyFiler.unit.environment
 
-import OccupancyFiler.environment.SequenceNumberFormatter
+import OccupancyFiler.logic.SequenceNumberFormatter
 import spock.lang.Specification
 import spock.lang.Unroll
 

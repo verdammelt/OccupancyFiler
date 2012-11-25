@@ -1,8 +1,8 @@
 package OccupancyFiler.unit.environment
 
-import OccupancyFiler.FileLines
-import OccupancyFiler.FileWriter
-import OccupancyFiler.environment.SequenceNumber
+import OccupancyFiler.io.FileWriter
+import OccupancyFiler.logic.FileLines
+import OccupancyFiler.logic.SequenceNumber
 import spock.lang.Specification
 
 class SequenceNumberTest extends Specification {
