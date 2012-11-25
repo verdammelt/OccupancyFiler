@@ -18,6 +18,11 @@ class Filer {
     }
 
     private void fileWithSequenceNumber(int sequenceNumber) {
+        Closure process = constructProcess(sequenceNumber)
+        arguments.files.each process
+    }
+
+    private Closure constructProcess(int sequenceNumber) {
         def logStart = {File file -> log("processing ${file?.absolutePath}"); file }
         def logTrimmed = {File file -> log("trimmed..."); file }
         def logRenamed = {File file -> log("renamed to ${file?.name}"); file }
@@ -28,9 +33,7 @@ class Filer {
         def rename = arguments.renamer.&rename.curry(sequenceNumber) >> logRenamed
         def move = arguments.mover.&move >> logMoved
 
-        def process = logStart >> trim >> rename >> move >> logDone
-
-        arguments.files.each process
+        logStart >> trim >> rename >> move >> logDone
     }
 }
 
