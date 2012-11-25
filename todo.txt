@@ -21,5 +21,5 @@ Improvements:
 * collect reader,writer,deleter into a single helper class
 * Keep moving all File usages up to the top
 * Split filer - the tests seem to be telling me it has two responsibilities
-    1) generate seqnum for each file in input and delete them after processing
+    1) generate sequence number for each file in input and delete them after processing
     2) process each file
