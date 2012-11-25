@@ -13,16 +13,12 @@ class Filer {
 
     void performFiling() {
         arguments.sequenceNumber.doWithNextNumber { int sequenceNumber ->
-            fileWithSequenceNumber(sequenceNumber)
+            arguments.files.each constructProcessFn(sequenceNumber)
         }
     }
 
-    private void fileWithSequenceNumber(int sequenceNumber) {
-        Closure process = constructProcess(sequenceNumber)
-        arguments.files.each process
-    }
 
-    private Closure constructProcess(int sequenceNumber) {
+    private Closure constructProcessFn(int sequenceNumber) {
         def logStart = {File file -> log("processing ${file?.absolutePath}"); file }
         def logTrimmed = {File file -> log("trimmed..."); file }
         def logRenamed = {File file -> log("renamed to ${file?.name}"); file }
