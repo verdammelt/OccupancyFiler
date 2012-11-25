@@ -1,7 +1,7 @@
 package OccupancyFiler
 
-import OccupancyFiler.arguments.ArgumentParser
 import OccupancyFiler.arguments.ArgumentReader
+import OccupancyFiler.arguments.Toolbox
 
 import static OccupancyFiler.utilities.Logger.log
 
@@ -13,7 +13,7 @@ class FilerMain {
             if (arguments.helpWanted) {
                 arguments.printUsage()
             } else {
-                new Filer(new ArgumentParser(arguments)).performFiling()
+                new Filer(new Toolbox(arguments)).performFiling()
             }
         }
     }

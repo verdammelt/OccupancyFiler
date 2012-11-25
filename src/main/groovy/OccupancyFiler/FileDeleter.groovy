@@ -1,13 +1,7 @@
 package OccupancyFiler
 
 class FileDeleter {
-    private final File file
-
-    FileDeleter(File file) {
-        this.file = file
-    }
-
-    void delete() {
-        file.delete()
+    void delete(File file) {
+        if (file) file.delete()
     }
 }

@@ -15,7 +15,7 @@ class FileDeleterTest extends Specification {
 
     def "deletes the file"() {
         when:
-        new FileDeleter(testFile).delete()
+        new FileDeleter().delete(testFile)
 
         then:
         !testFile.exists()
@@ -26,10 +26,18 @@ class FileDeleterTest extends Specification {
         def nonExistantFile = new File("does not exist")
 
         when:
-        new FileDeleter(nonExistantFile).delete()
+        new FileDeleter().delete(nonExistantFile)
 
         then:
         noExceptionThrown()
         !nonExistantFile.exists()
+    }
+
+    def "does not complain if the file is null"() {
+        when:
+        new FileDeleter().delete(null)
+
+        then:
+        noExceptionThrown()
     }
 }

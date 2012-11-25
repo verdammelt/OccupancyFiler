@@ -41,7 +41,7 @@ class WalkingSkeletonTest extends Specification {
         notThrown(Exception)
 
         and: "moved to the correct location and filename changed corrected rightly"
-        !filesIn(TEST_INPUT_DIR.path)*.name.contains('Staging_Occupancy.Boston.00000043.2012.csv')
+        filesIn(TEST_INPUT_DIR.path).empty
         filesIn(TEST_OUTPUT_DIR.path)*.name.contains('Staging_Occupancy.Boston.00000043.2012.csv')
 
         and: "the file header line is removed"

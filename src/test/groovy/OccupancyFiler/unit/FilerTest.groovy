@@ -1,67 +1,63 @@
 package OccupancyFiler.unit;
 
 
-import OccupancyFiler.Filer
-import OccupancyFiler.arguments.ArgumentParser
+import OccupancyFiler.arguments.Toolbox
 import OccupancyFiler.environment.SequenceNumber
-import OccupancyFiler.file.FileMover
-import OccupancyFiler.file.FileRenamer
-import OccupancyFiler.file.FileTrimmer
+import OccupancyFiler.file.FileLinesTrimmer
 import OccupancyFiler.file.FilesInDirectory
+import OccupancyFiler.file.NameGenerator
 import spock.lang.Specification
+import OccupancyFiler.*
 
 public class FilerTest extends Specification {
-    def "uses SequenceNumber doWithNextNumber to get the job done"() {
+    private static final int TEST_SEQ_NUM = 42
+
+    def "uses SequenceNumber doWithNextNumber to get the job done for each file"() {
         given:
+        def files = mockFilesInDirectory([new File('a'), new File('b')])
         def seqNum = Mock(SequenceNumber)
 
         when:
-        new Filer(makeMockArgs(null, null, null, null, seqNum)).performFiling()
+        new Filer(makeMockToolbox(files, null, null, seqNum, null, null, Mock(FileDeleter), new TargetDirectory('.'))).performFiling()
 
         then:
-        1 * seqNum.doWithNextNumber(_)
+        2 * seqNum.doWithNextNumber(_)
     }
 
-    @SuppressWarnings("GroovyAssignabilityCheck")
-    def "moves all input files to the output directory"() {
-        given:
-        def files = mockFilesInDirectory([Mock(File), Mock(File)])
-        def mover = Mock(FileMover)
-        def renamer = Mock(FileRenamer)
-        renamer.rename(_,_) >> new File('renamed')
+    def "deletes files after processing"() {
+        def files = mockFilesInDirectory([new File('a'), new File('b')])
+        def seqNum = Mock(SequenceNumber)
+        def deleter = Mock(FileDeleter)
 
         when:
-        fileWithArgs(makeMockArgs(files, mover, renamer, Mock(FileTrimmer), Mock(SequenceNumber)))
+        new Filer(makeMockToolbox(files, null, null, seqNum, null, null, deleter, new TargetDirectory('.'))).performFiling()
 
         then:
-        2 * mover.move(new File('renamed'))
+        1 * deleter.delete(new File('a'))
+        1 * deleter.delete(new File('b'))
     }
-
-    @SuppressWarnings("GroovyAssignabilityCheck")
-    def "renames each file"() {
+    def "reads each file, trims the headers off the lines, then writes the lines to a new filename"() {
         given:
-        def files = mockFilesInDirectory([new File('a')])
-        def renamer = Mock(FileRenamer)
-        def trimmer = Mock(FileTrimmer)
-        trimmer.trimTopLines(_) >> {File file -> file}
+        FileReader reader = Mock(FileReader)
+        FileLines linesA = new FileLines(['a', 'b', 'c'])
+        reader.read(new File('a')) >> linesA
+
+        def trimmer = Mock(FileLinesTrimmer)
+        def trimmedLines = new FileLines(['b', 'c'])
+        trimmer.trimTopLines(linesA) >> trimmedLines
+
+        def renamer = Mock(NameGenerator)
+        renamer.generateName(TEST_SEQ_NUM) >> 'newFile.txt'
+
+        def writer = Mock(FileWriter)
+
+        def directory = new TargetDirectory('/tmp/foo')
 
         when:
-        fileWithArgs(makeMockArgs(files, Mock(FileMover), renamer, trimmer, Mock(SequenceNumber)))
+        fileWithArgs(new File('a'), makeMockToolbox(null, renamer, trimmer, Mock(SequenceNumber), reader, writer, Mock(FileDeleter), directory))
 
         then:
-        1 * renamer.rename(_,new File('a'))
-    }
-
-    def "chops the header off the file"() {
-        given:
-        def files = mockFilesInDirectory([new File('a')])
-        def trimmer = Mock(FileTrimmer)
-
-        when:
-        fileWithArgs(makeMockArgs(files, Mock(FileMover), Mock(FileRenamer), trimmer, Mock(SequenceNumber)))
-
-        then:
-        1 * trimmer.trimTopLines(new File('a'))
+        1 * writer.write('/tmp/foo/newFile.txt', trimmedLines)
     }
 
     private FilesInDirectory mockFilesInDirectory(listOfFiles) {
@@ -70,22 +66,28 @@ public class FilerTest extends Specification {
         files
     }
 
-    private ArgumentParser makeMockArgs(FilesInDirectory files,
-                                        FileMover mover,
-                                        FileRenamer renamer,
-                                        FileTrimmer trimmer,
-                                        SequenceNumber sequenceNumber) {
-        def argParser = Mock(ArgumentParser)
-        argParser.files >> files
-        argParser.mover >> mover
-        argParser.renamer >> renamer
-        argParser.trimmer >> trimmer
-        argParser.sequenceNumber >> sequenceNumber
-        argParser
+    private Toolbox makeMockToolbox(FilesInDirectory files,
+                                    NameGenerator renamer,
+                                    FileLinesTrimmer trimmer,
+                                    SequenceNumber sequenceNumber,
+                                    FileReader reader,
+                                    FileWriter writer,
+                                    FileDeleter deleter,
+                                    TargetDirectory targetDirectory) {
+        def toolbox = Mock(Toolbox)
+        toolbox.files >> files
+        toolbox.renamer >> renamer
+        toolbox.trimmer >> trimmer
+        toolbox.sequenceNumber >> sequenceNumber
+        toolbox.reader >> reader
+        toolbox.writer >> writer
+        toolbox.deleter >> deleter
+        toolbox.targetDirectory >> targetDirectory
+        toolbox
     }
 
     @SuppressWarnings("GroovyAccessibility")
-    private void fileWithArgs(ArgumentParser args) {
-        new Filer(args).fileWithSequenceNumber(42)
+    private void fileWithArgs(File file, Toolbox args) {
+        new Filer(args).fileWithSequenceNumber(file, TEST_SEQ_NUM)
     }
 }

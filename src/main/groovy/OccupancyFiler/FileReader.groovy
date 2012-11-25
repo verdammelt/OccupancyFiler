@@ -1,13 +1,7 @@
 package OccupancyFiler
 
 class FileReader {
-    private final File file
-
-    FileReader(File file) {
-        this.file = file
-    }
-
-    FileLines read() {
+    FileLines read(File file) {
         new FileLines(file.exists() ? file.readLines() : [])
     }
 }

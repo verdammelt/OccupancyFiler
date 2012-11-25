@@ -2,16 +2,11 @@ package OccupancyFiler.file
 
 import OccupancyFiler.FileLines
 
-class FileTrimmer {
+class FileLinesTrimmer {
     final int numLinesToSkip
 
-    FileTrimmer(int numLinesToSkip) {
+    FileLinesTrimmer(int numLinesToSkip) {
         this.numLinesToSkip = numLinesToSkip
-    }
-
-    File trimTopLines(File file) {
-        file.text = file.readLines().drop(numLinesToSkip).join('\n')
-        file
     }
 
     FileLines trimTopLines(FileLines lines) {

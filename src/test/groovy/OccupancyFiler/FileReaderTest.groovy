@@ -14,26 +14,20 @@ class FileReaderTest extends Specification {
         def lines = ['a', 'b', 'c']
         given:
         setupFileWithLines(lines)
-        def reader = new FileReader(testFile)
-
         expect:
-        reader.read() == new FileLines(lines)
+        new FileReader().read(testFile) == new FileLines(lines)
     }
 
     def "empty file has no lines"() {
         given:
         setupFileWithLines([])
-        def reader = new FileReader(testFile)
-
         expect:
-        reader.read() == new FileLines([])
+        new FileReader().read(testFile) == new FileLines([])
     }
 
     def "non-existant file has no lines"() {
-        given:
-        def reader = new FileReader(new File('bogus file'))
         expect:
-        reader.read() == new FileLines([])
+        new FileReader().read(new File('bogus file')) == new FileLines([])
     }
 
     void setupFileWithLines(List<String> lines) {

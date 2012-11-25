@@ -4,12 +4,12 @@ import OccupancyFiler.environment.DeployedEnvironment
 import OccupancyFiler.environment.SequenceNumberFormatter
 import OccupancyFiler.environment.YearSource
 
-class FileRenamer {
+class NameGenerator {
     private final DeployedEnvironment deployedEnvironment
     private final YearSource yearSource
     private final SequenceNumberFormatter formatter
 
-    FileRenamer(DeployedEnvironment deployedEnvironment,
+    NameGenerator(DeployedEnvironment deployedEnvironment,
                 YearSource yearSource,
                 SequenceNumberFormatter sequenceNumberFormatter) {
         this.deployedEnvironment = deployedEnvironment
@@ -17,18 +17,11 @@ class FileRenamer {
         this.formatter = sequenceNumberFormatter
     }
 
-    File rename(int seqNumber, File file) {
-        def newFile = new File(getNewName(seqNumber))
-        newFile << file.asWritable()
-        file.delete()
-        newFile
-    }
-
-    private String getNewName(int seqNumber) {
+    String generateName(int seqNum) {
         [
                 prefix,
                 'Boston',
-                formatSequenceNumber(seqNumber),
+                formatSequenceNumber(seqNum),
                 thisYear,
                 'csv'
         ].join('.')
