@@ -5,7 +5,6 @@ import OccupancyFiler.arguments.Toolbox
 import OccupancyFiler.environment.SequenceNumber
 import OccupancyFiler.file.FileLinesTrimmer
 import OccupancyFiler.file.FilesInDirectory
-import OccupancyFiler.file.NameGenerator
 import spock.lang.Specification
 import OccupancyFiler.*
 
@@ -18,7 +17,7 @@ public class FilerTest extends Specification {
         def seqNum = Mock(SequenceNumber)
 
         when:
-        new Filer(makeMockToolbox(files, null, null, seqNum, null, null, Mock(FileDeleter), new TargetDirectory('.'))).performFiling()
+        new Filer(makeMockToolbox(files, seqNum, Mock(FileDeleter))).performFiling()
 
         then:
         2 * seqNum.doWithNextNumber(_)
@@ -30,12 +29,13 @@ public class FilerTest extends Specification {
         def deleter = Mock(FileDeleter)
 
         when:
-        new Filer(makeMockToolbox(files, null, null, seqNum, null, null, deleter, new TargetDirectory('.'))).performFiling()
+        new Filer(makeMockToolbox(files, seqNum, deleter)).performFiling()
 
         then:
         1 * deleter.delete(new File('a'))
         1 * deleter.delete(new File('b'))
     }
+
     def "reads each file, trims the headers off the lines, then writes the lines to a new filename"() {
         given:
         FileReader reader = Mock(FileReader)
@@ -46,15 +46,13 @@ public class FilerTest extends Specification {
         def trimmedLines = new FileLines(['b', 'c'])
         trimmer.trimTopLines(linesA) >> trimmedLines
 
-        def renamer = Mock(NameGenerator)
-        renamer.generateName(TEST_SEQ_NUM) >> 'newFile.txt'
+        def pathGenerator = Mock(FilePathGenerator)
+        pathGenerator.generatePath(TEST_SEQ_NUM) >> '/tmp/foo/newFile.txt'
 
         def writer = Mock(FileWriter)
 
-        def directory = new TargetDirectory('/tmp/foo')
-
         when:
-        fileWithArgs(new File('a'), makeMockToolbox(null, renamer, trimmer, Mock(SequenceNumber), reader, writer, Mock(FileDeleter), directory))
+        fileWithArgs(new File('a'), makeMockToolbox(trimmer, reader, writer, pathGenerator))
 
         then:
         1 * writer.write('/tmp/foo/newFile.txt', trimmedLines)
@@ -67,22 +65,26 @@ public class FilerTest extends Specification {
     }
 
     private Toolbox makeMockToolbox(FilesInDirectory files,
-                                    NameGenerator renamer,
-                                    FileLinesTrimmer trimmer,
                                     SequenceNumber sequenceNumber,
-                                    FileReader reader,
-                                    FileWriter writer,
-                                    FileDeleter deleter,
-                                    TargetDirectory targetDirectory) {
+                                    FileDeleter deleter) {
         def toolbox = Mock(Toolbox)
         toolbox.files >> files
-        toolbox.renamer >> renamer
-        toolbox.trimmer >> trimmer
         toolbox.sequenceNumber >> sequenceNumber
+        toolbox.deleter >> deleter
+
+        toolbox
+    }
+
+    private Toolbox makeMockToolbox(
+                                    FileLinesTrimmer trimmer,
+                                    FileReader reader,
+                                    FileWriter writer,
+                                    FilePathGenerator pathGenerator) {
+        def toolbox = Mock(Toolbox)
+        toolbox.trimmer >> trimmer
         toolbox.reader >> reader
         toolbox.writer >> writer
-        toolbox.deleter >> deleter
-        toolbox.targetDirectory >> targetDirectory
+        toolbox.filePathGenerator >> pathGenerator
         toolbox
     }
 

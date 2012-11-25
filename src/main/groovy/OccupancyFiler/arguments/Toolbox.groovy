@@ -1,9 +1,5 @@
 package OccupancyFiler.arguments
 
-import OccupancyFiler.FileDeleter
-import OccupancyFiler.FileReader
-import OccupancyFiler.FileWriter
-import OccupancyFiler.TargetDirectory
 import OccupancyFiler.environment.DeployedEnvironment
 import OccupancyFiler.environment.SequenceNumber
 import OccupancyFiler.environment.SequenceNumberFormatter
@@ -11,6 +7,7 @@ import OccupancyFiler.environment.YearSource
 import OccupancyFiler.file.FileLinesTrimmer
 import OccupancyFiler.file.FilesInDirectory
 import OccupancyFiler.file.NameGenerator
+import OccupancyFiler.*
 
 class Toolbox {
     private final FilesInDirectory files
@@ -21,6 +18,7 @@ class Toolbox {
     private final FileWriter writer
     private final FileDeleter deleter
     private final TargetDirectory targetDirectory
+    private final FilePathGenerator filePathGenerator
 
     Toolbox(ArgumentReader args) {
         this.files = new FilesInDirectory(args.inputDirectory)
@@ -36,11 +34,12 @@ class Toolbox {
         this.trimmer = new FileLinesTrimmer(args.numLinesToTrim)
         this.deleter = new FileDeleter()
         this.targetDirectory = new TargetDirectory(args.outputDirectory.absolutePath)
+        this.filePathGenerator = new FilePathGenerator(targetDirectory, nameGenerator)
     }
 
     FilesInDirectory getFiles() { files }
 
-    NameGenerator getRenamer() { nameGenerator }
+    NameGenerator getNameGenerator() { nameGenerator }
 
     SequenceNumber getSequenceNumber() { sequenceNumber }
 
@@ -52,5 +51,7 @@ class Toolbox {
 
     FileDeleter getDeleter() { deleter }
 
-    TargetDirectory getTargetDirectory() {targetDirectory}
+    TargetDirectory getTargetDirectory() { targetDirectory }
+
+    FilePathGenerator getFilePathGenerator() { filePathGenerator }
 }

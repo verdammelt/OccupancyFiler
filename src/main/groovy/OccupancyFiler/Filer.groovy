@@ -50,7 +50,7 @@ class Filer {
 
     // TODO: pull this into another helper class
     private String getNewFileName(int sequenceNumber) {
-        new File(toolbox.targetDirectory.path, toolbox.renamer.generateName(sequenceNumber)).absolutePath
+        toolbox.filePathGenerator.generatePath(sequenceNumber)
     }
 }
 
