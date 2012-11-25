@@ -23,3 +23,4 @@ Improvements:
 * Split filer - the tests seem to be telling me it has two responsibilities
     1) generate sequence number for each file in input and delete them after processing
     2) process each file
+* inject logging so we can turn it off for testing.
