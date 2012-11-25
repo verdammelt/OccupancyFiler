@@ -1,29 +1,23 @@
 package OccupancyFiler.environment
 
 import OccupancyFiler.FileLines
-import OccupancyFiler.FileReader
 import OccupancyFiler.FileWriter
 
 class SequenceNumber {
-    private final File sequenceNumberFile
-    private String initialText
-
+    private final String initialText
     private final FileWriter writer
+    private final String sequenceNumberFilePath
 
-    SequenceNumber(File sequenceNumberFile, FileReader reader, FileWriter writer) {
-        this.sequenceNumberFile = sequenceNumberFile
-        this.initialText = getFileLines(reader, sequenceNumberFile).first()
+    SequenceNumber(String seqNumFilePath, FileLines lines, FileWriter writer) {
+        this.sequenceNumberFilePath = seqNumFilePath
+        this.initialText = (lines.lines ?: ['0']).first()
         this.writer = writer
     }
 
-    private List<String> getFileLines(FileReader reader, File sequenceNumberFile) {
-        reader.read(sequenceNumberFile).lines ?: ['0']
-    }
-
     void doWithNextNumber(Closure task) {
-        def next1 = initialText.toInteger() + 1
-        def next = next1
-        task(next)
-        writer.write(sequenceNumberFile.absolutePath, new FileLines([next1.toString()]))
+        def nextNumber = initialText.toInteger() + 1
+        task(nextNumber)
+        writer.write(sequenceNumberFilePath,
+                new FileLines([nextNumber.toString()]))
     }
 }

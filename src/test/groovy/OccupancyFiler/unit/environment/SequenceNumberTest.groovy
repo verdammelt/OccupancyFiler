@@ -15,7 +15,7 @@ class SequenceNumberTest extends Specification {
         def reader = Mock(FileReader)
         reader.read(testFile) >> new FileLines([])
         def writer = Mock(FileWriter)
-        def seqNum = new SequenceNumber(testFile, reader, writer)
+        def seqNum = new SequenceNumber(testFile.absolutePath, new FileLines(reader.read(testFile).lines), writer)
 
         int caughtNumber = -1
 
@@ -35,7 +35,7 @@ class SequenceNumberTest extends Specification {
         def reader = Mock(FileReader)
         reader.read(testFile) >> new FileLines(['42'])
         def writer = Mock(FileWriter)
-        def seqNum = new SequenceNumber(testFile, reader, writer)
+        def seqNum = new SequenceNumber(testFile.absolutePath, new FileLines(reader.read(testFile).lines), writer)
 
         int caughtNumber = -1
 
@@ -55,7 +55,7 @@ class SequenceNumberTest extends Specification {
         def writer = Mock(FileWriter)
         def reader = Mock(FileReader)
         reader.read(testFile) >> new FileLines(['13'])
-        def seqNum = new SequenceNumber(testFile, reader, writer)
+        def seqNum = new SequenceNumber(testFile.absolutePath, new FileLines(reader.read(testFile).lines), writer)
         def workToDo = { int unused -> throw new Exception("boom") }
 
         when:

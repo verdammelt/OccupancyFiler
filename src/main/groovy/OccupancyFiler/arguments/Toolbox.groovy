@@ -26,7 +26,10 @@ class Toolbox {
         this.files = new FilesInDirectory(args.inputDirectory)
         this.reader = new FileReader()
         this.writer = new FileWriter()
-        this.sequenceNumber = new SequenceNumber(args.seqNumFile, this.reader, this.writer)
+
+        this.sequenceNumber = new SequenceNumber(args.seqNumFile.absolutePath,
+                this.reader.read(args.seqNumFile),
+                this.writer)
         this.nameGenerator = new NameGenerator(new DeployedEnvironment(args.environment),
                 new YearSource(),
                 new SequenceNumberFormatter())
@@ -44,7 +47,10 @@ class Toolbox {
     FileLinesTrimmer getTrimmer() { trimmer }
 
     FileReader getReader() { reader }
+
     FileWriter getWriter() { writer }
+
     FileDeleter getDeleter() { deleter }
+
     TargetDirectory getTargetDirectory() {targetDirectory}
 }
