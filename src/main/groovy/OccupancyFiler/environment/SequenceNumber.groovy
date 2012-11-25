@@ -1,32 +1,29 @@
 package OccupancyFiler.environment
 
-import static OccupancyFiler.file.FileEnsurer.ifDoesNotExist
+import OccupancyFiler.FileLines
+import OccupancyFiler.FileReader
+import OccupancyFiler.FileWriter
 
 class SequenceNumber {
     private final File sequenceNumberFile
-    private String currentText
+    private String initialText
 
-    SequenceNumber(File sequenceNumberFile) {
-        this.sequenceNumberFile = ifDoesNotExist(sequenceNumberFile) { File file ->
-            file.text = "0"
-            file
-        }
-        this.currentText = this.sequenceNumberFile.text
+    private final FileWriter writer
+
+    SequenceNumber(File sequenceNumberFile, FileReader reader, FileWriter writer) {
+        this.sequenceNumberFile = sequenceNumberFile
+        this.initialText = getFileLines(reader, sequenceNumberFile).first()
+        this.writer = writer
     }
 
-    int next() {
-        def next = this.sequenceNumberFile.text.toInteger() + 1
-        currentText = next.toString()
-        next
-    }
-
-    void commit() {
-        sequenceNumberFile.text = currentText
+    private List<String> getFileLines(FileReader reader, File sequenceNumberFile) {
+        reader.read(sequenceNumberFile).lines ?: ['0']
     }
 
     void doWithNextNumber(Closure task) {
-        def next = next()
+        def next1 = initialText.toInteger() + 1
+        def next = next1
         task(next)
-        commit()
+        writer.write(sequenceNumberFile.absolutePath, new FileLines([next1.toString()]))
     }
 }

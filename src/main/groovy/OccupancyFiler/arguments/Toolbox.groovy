@@ -24,13 +24,13 @@ class Toolbox {
 
     Toolbox(ArgumentReader args) {
         this.files = new FilesInDirectory(args.inputDirectory)
-        this.sequenceNumber = new SequenceNumber(args.seqNumFile)
+        this.reader = new FileReader()
+        this.writer = new FileWriter()
+        this.sequenceNumber = new SequenceNumber(args.seqNumFile, this.reader, this.writer)
         this.nameGenerator = new NameGenerator(new DeployedEnvironment(args.environment),
                 new YearSource(),
                 new SequenceNumberFormatter())
         this.trimmer = new FileLinesTrimmer(args.numLinesToTrim)
-        this.reader = new FileReader()
-        this.writer = new FileWriter()
         this.deleter = new FileDeleter()
         this.targetDirectory = new TargetDirectory(args.outputDirectory.absolutePath)
     }

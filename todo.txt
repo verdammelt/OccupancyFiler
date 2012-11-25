@@ -8,7 +8,7 @@ x pass deployed environment in from command line.
 x error handling (like missing files and directories)
 x output/logging
 x script to run it correctly
-* remove File code from SequenceNumber
+x remove direct File code from SequenceNumber
 * pull file path generation into a helper class
 * collect reader,writer,deleter into a single helper class
 * make the FileExists.ensure method a groovy helper

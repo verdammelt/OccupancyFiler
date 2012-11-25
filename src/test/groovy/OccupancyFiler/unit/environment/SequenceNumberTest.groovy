@@ -1,102 +1,67 @@
 package OccupancyFiler.unit.environment
 
+import OccupancyFiler.FileLines
+import OccupancyFiler.FileReader
+import OccupancyFiler.FileWriter
 import OccupancyFiler.environment.SequenceNumber
 import spock.lang.Specification
 
 class SequenceNumberTest extends Specification {
     final File testFile = new File('foobar')
-    final File otherFile = new File('otherFile')
 
-    def cleanup() {
-        testFile.delete()
-        otherFile.delete()
-    }
-
-    def "initializes the sequence number from the given file"() {
-        given:
-        testFile.text = '42'
-        def seqNum = new SequenceNumber(testFile)
-
-        expect:
-        seqNum.next() == 43
-    }
-
-    def "calling next multiple times returns the same value each time"() {
-        given:
-        testFile.text = '42'
-        def seqNum = new SequenceNumber(testFile)
-
-        when:
-        seqNum.next()
-        seqNum.next()
-
-        then:
-        seqNum.next() == 43
-    }
-
-    def "new number can be committed"() {
-        given:
-        testFile.text = '42'
-        def seqNum = new SequenceNumber(testFile)
-
-        when:
-        seqNum.next()
-        seqNum.commit()
-
-        then:
-        testFile.text == '43'
-    }
-
-    def "number not changed if commit called but not next"() {
-        given:
-        testFile.text = '42'
-        def seqNum = new SequenceNumber(testFile)
-
-        when:
-        seqNum.commit()
-
-        then:
-        testFile.text == '42'
-    }
-
+    @SuppressWarnings("GroovyResultOfAssignmentUsed")
     def "creates sequence number file if it does not exist and sequence number starts at zero"() {
         given:
-        otherFile.delete()
+        def reader = Mock(FileReader)
+        reader.read(testFile) >> new FileLines([])
+        def writer = Mock(FileWriter)
+        def seqNum = new SequenceNumber(testFile, reader, writer)
+
+        int caughtNumber = -1
 
         when:
-        new SequenceNumber(otherFile).commit()
+        seqNum.doWithNextNumber { int number ->
+            caughtNumber = number
+        }
 
         then:
-        otherFile.text == '0'
+        caughtNumber == 1
+        1 * writer.write(testFile.absolutePath, new FileLines(['1']))
     }
 
     @SuppressWarnings("GroovyResultOfAssignmentUsed")
-    def "calls the given closure with the next sequence number and commits when done"() {
+    def "initializes the sequence number from the given file and commits it after use"() {
         given:
-        testFile.text = "13"
-        def seqNum = new SequenceNumber(testFile)
-        def capturedSequenceNumber = -1
-        def workToDo = {int sequenceNumber -> capturedSequenceNumber = sequenceNumber }
+        def reader = Mock(FileReader)
+        reader.read(testFile) >> new FileLines(['42'])
+        def writer = Mock(FileWriter)
+        def seqNum = new SequenceNumber(testFile, reader, writer)
+
+        int caughtNumber = -1
 
         when:
-        seqNum.doWithNextNumber workToDo
+        seqNum.doWithNextNumber { int number ->
+            caughtNumber = number
+        }
 
         then:
-        capturedSequenceNumber == 14
-        seqNum.next() == 15
+        caughtNumber == 43
+        1 * writer.write(testFile.absolutePath, new FileLines(['43']))
     }
 
     @SuppressWarnings(["GroovyUnusedCatchParameter", "GroovyEmptyCatchBlock", "GroovyLocalVariableNamingConvention"])
     def "does not commit if task throws an exception"() {
         given:
-        testFile.text = "13"
-        def seqNum = new SequenceNumber(testFile)
+        def writer = Mock(FileWriter)
+        def reader = Mock(FileReader)
+        reader.read(testFile) >> new FileLines(['13'])
+        def seqNum = new SequenceNumber(testFile, reader, writer)
         def workToDo = { int unused -> throw new Exception("boom") }
 
         when:
         try { seqNum.doWithNextNumber workToDo } catch (Exception) {}
 
         then:
-        seqNum.next() == 14
+        0 * writer.write(_,_)
     }
 }
