@@ -8,6 +8,6 @@ class FileLinesTrimmer {
     }
 
     FileLines trimTopLines(FileLines lines) {
-        new FileLines(lines.lines.drop(numLinesToSkip))
+        lines.dropFirstLines(numLinesToSkip)
     }
 }

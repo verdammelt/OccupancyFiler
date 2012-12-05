@@ -9,7 +9,7 @@ class SequenceNumber {
 
     SequenceNumber(String seqNumFilePath, FileLines lines, FileWriter writer) {
         this.sequenceNumberFilePath = seqNumFilePath
-        this.initialText = (lines.lines ?: ['0']).first()
+        this.initialText = lines.fetchFirst('0')
         this.writer = writer
     }
 

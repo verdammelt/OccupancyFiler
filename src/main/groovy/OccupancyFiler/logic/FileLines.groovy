@@ -1,8 +1,26 @@
 package OccupancyFiler.logic
 
-import groovy.transform.Immutable
+import groovy.transform.EqualsAndHashCode
 
-@Immutable
+@EqualsAndHashCode
 class FileLines {
-    List<String> lines
+    private final List<String> lines
+
+    FileLines(List<String> lines) {
+        this.lines = lines
+    }
+
+    String fetchFirst(String defaultValue = null) {
+        lines.empty ? defaultValue : lines.first()
+    }
+
+
+    FileLines dropFirstLines(int numLinesToDrop) {
+        new FileLines(lines.drop(numLinesToDrop))
+    }
+
+    @Override
+    public String toString() {
+        lines.join('\n')
+    }
 }
