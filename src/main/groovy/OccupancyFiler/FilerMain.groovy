@@ -9,13 +9,19 @@ import static OccupancyFiler.utilities.Logger.log
 class FilerMain {
     static void main(String[] argv) {
         withLoggedException {
-            def arguments = new ArgumentReader(argv)
-
-            if (arguments.helpWanted) {
-                arguments.printUsage()
-            } else {
-                new Filer(new Toolbox(arguments)).performFiling()
+            withToolboxBuiltFromArguments(argv) { Toolbox toolbox ->
+                new Filer(toolbox).performFiling()
             }
+        }
+    }
+
+    static void withToolboxBuiltFromArguments(String[] argv, Closure task) {
+        def arguments = new ArgumentReader(argv)
+
+        if (arguments.helpWanted) {
+            arguments.printUsage()
+        } else {
+            task.call(new Toolbox(arguments))
         }
     }
 
