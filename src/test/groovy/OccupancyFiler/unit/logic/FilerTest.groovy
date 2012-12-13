@@ -1,13 +1,12 @@
-package OccupancyFiler.unit.logic;
-
+package OccupancyFiler.unit.logic
 
 import OccupancyFiler.arguments.Toolbox
 import OccupancyFiler.io.FileDeleter
 import OccupancyFiler.io.FileReader
 import OccupancyFiler.io.FileWriter
 import OccupancyFiler.io.FilesInDirectory
-import spock.lang.Specification
 import OccupancyFiler.logic.*
+import spock.lang.Specification
 
 public class FilerTest extends Specification {
     private static final int TEST_SEQ_NUM = 42
@@ -89,7 +88,7 @@ public class FilerTest extends Specification {
         toolbox
     }
 
-    @SuppressWarnings("GroovyAccessibility")
+    @SuppressWarnings(["GroovyAccessibility", "GrMethodMayBeStatic"])
     private void fileWithArgs(File file, Toolbox args) {
         new Filer(args).processFileWithSequenceNumber(file, TEST_SEQ_NUM)
     }

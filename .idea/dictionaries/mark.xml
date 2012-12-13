@@ -11,6 +11,8 @@
       <w>objenesis</w>
       <w>renamer</w>
       <w>spockframework</w>
+      <w>testfile</w>
+      <w>textfile</w>
     </words>
   </dictionary>
 </component>
