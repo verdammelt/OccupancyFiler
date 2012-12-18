@@ -20,6 +20,15 @@ class FileWriterTest extends Specification {
         new File(TEST_FILE_NAME).readLines() == lines
     }
 
+    def "returns the written file"() {
+        def lines = ['a', 'b', 'c']
+        when:
+        def file = new FileWriter().write(TEST_FILE_NAME, new FileLines(lines))
+
+        then:
+        file.readLines() == lines
+    }
+
     def "overwrites already existing file"() {
         given:
         new File(TEST_FILE_NAME).text = 'old text'
