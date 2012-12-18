@@ -18,6 +18,6 @@ class FilePathGeneratorTest extends Specification {
         def path = generator.generatePath(42)
 
         then:
-        path == '/tmp/foo/theFileName.42'
+        new File(path) == new File('/tmp/foo/theFileName.42')
     }
 }
